@@ -1,0 +1,12 @@
+{
+  "name": "server-recipe",
+  "version": "0.0.1",
+  "description": "Server to store/edit/add recipes",
+  "main": "index.js",
+  "repository": "git@github.com:VoidMats/server-recipe.git",
+  "author": "Mats Eriksson <mats.eriksson.ingemar@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^4.27.0"
+  }
+}
