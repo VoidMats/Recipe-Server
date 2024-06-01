@@ -16,17 +16,7 @@ export default function createServer(config) {
         runningInContainer: hasDockerEnv() || hasDockerGroup(),
     };
 
-    const DATABASES = {};
-    // Check if there are environment variables for mongodb
-
-    // Check if there are environment variables for postgres
-
-    // There are no environment variables for databases. Use sqlite3
-    if (!Object.keys(DATABASES).length) {
-
-    }
-
-    const CONFIG = {
+    const CONFIG = {  //Freeze ??
         logger: false,
         bodyLimit: 1024 * 1024,                                     // 1 mb
         pluginTimeout: 20000,
@@ -35,9 +25,11 @@ export default function createServer(config) {
     const fastify = Fastify(Object.assign(CONFIG, config));
 
     console.log("==> Register decorators");
-    fastify.decorate("setting", SETTING);
+    fastify.decorate("config", CONFIG);
 
     console.log("==> Register plugins");
+    fastify.register(db, config);
+
     fastify.register(staticRouter, {
         root: path.join(__dirname, "../build"),
         prefix: "/",

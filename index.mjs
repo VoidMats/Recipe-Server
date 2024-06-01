@@ -5,7 +5,7 @@ const start = async () => {
     const config = readEnvironment();
     const fastify = createServer(config);
 
-    fastify.listen({ port: CONFIG.SERVER_PORT, host: "0.0.0.0" }, async (error, address) => {
+    fastify.listen({ port: config.SERVER_PORT, host: "0.0.0.0" }, async (error, address) => {
         if (error) {
             fastify.log(error);
             process.exit(2);

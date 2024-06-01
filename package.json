@@ -6,9 +6,13 @@
   "repository": "git@github.com:VoidMats/server-recipe.git",
   "author": "Mats Eriksson <mats.eriksson.ingemar@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "node index.mjs"
+  },
   "dependencies": {
     "env-schema": "^5.2.1",
     "fastify": "^4.27.0",
-    "mongodb": "^6.6.2"
+    "mongodb": "^6.6.2",
+    "mongodb-uri": "^0.9.7"
   }
 }

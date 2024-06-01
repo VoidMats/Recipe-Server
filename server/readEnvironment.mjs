@@ -43,7 +43,7 @@ export default function readEnvironment(path = ".env") {
                 type: "integer",
                 default: 4,
                 enum: [ 4, 6 ],
-                description: "Database client should connect under ipv"
+                description: "Database client should connect under ipv4 or ipv6"
             }
         }
     }
