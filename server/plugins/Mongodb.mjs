@@ -6,9 +6,10 @@ import fastifyPlugin from "fastify-plugin";
 import { MongoClient, MongoError } from "mongodb";
 import mongodbURI from "mongodb-uri";
 
+const __FILE_BUCKET_NAME = "__image_filebucket";
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
-export default fastifyPlugin(
+const db = fastifyPlugin(
     async(fastify, config) => {
         const uri = {
             username: config.MONGO_USERNAME,
@@ -82,3 +83,8 @@ export default fastifyPlugin(
         name: "mongo"
     }
 )
+
+export {
+    __FILE_BUCKET_NAME,
+    db
+}
