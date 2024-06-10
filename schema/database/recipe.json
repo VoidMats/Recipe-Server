@@ -1,0 +1,102 @@
+{
+    "type": "object",
+    "required": [
+        "_id",
+        "sourceId",
+        "collectionId"
+    ],
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "title": {
+            "type": "string",
+            "description": "Title of the recipe"
+        },
+        "description": {
+            "type": "string",
+            "description": ""
+        },
+        "keywords": {
+            "type": "array",
+            "description": "",
+            "items": {
+                "type": "string"
+            }
+        },
+        "servings": {
+            "type": "number",
+            "description": "Number of servings of the recipe"
+        },
+        "components": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "ingredients": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "size": {
+                                    "type": "number",
+                                    "description": "" 
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "description": "",
+                                    "enum": [
+                                        "st",
+                                        "pcs",
+                                        "g",
+                                        "gr",
+                                        "kg",
+                                        "l",
+                                        "liter",
+                                        "dl",
+                                        "ml",
+                                        "",
+                                        "cups",
+                                        "tsk",
+                                        "msk",
+                                        "packet",
+                                        "knippa",
+                                        "knippa(or)"
+                                    ]
+                                },
+                                "ingredient": {
+                                    "type": "string",
+                                    "description": ""
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+        },
+        "methods": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "step": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "description": ""
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

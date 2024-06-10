@@ -24,6 +24,11 @@ export default function createServer(config) {
     };
     const fastify = Fastify(Object.assign(CONFIG, config));
 
+    console.log("==> Add content parser")
+    fastify.addContentTypeParser("application/octet-stream", (_, payload, done) => {
+        done(null, payload);
+    });
+
     console.log("==> Register decorators");
     fastify.decorate("config", CONFIG);
 
