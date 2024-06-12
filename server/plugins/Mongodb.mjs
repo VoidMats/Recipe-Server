@@ -20,7 +20,7 @@ const db = fastifyPlugin(
                     port: config.MONGO_PORT
                 }
             ],
-            database: config.MONGO_NAME,
+            database: config.MONGO_DATABASE,
             options: {
                 authSource: config.MONGO_AUTH
             }
@@ -59,7 +59,7 @@ const db = fastifyPlugin(
         // Add collections to databases if missing
         for (const [name, schema] of setting.collections) {
             try {
-                await this._db.command({ collMod: name, validator: { $jsonSchema: schema }});
+                await db.command({ collMod: name, validator: { $jsonSchema: schema }});
             } catch(error) {
                 // 26 === "ns not found" - collection doesn't exist
                 if (error instanceof MongoError && error.code === 26) {

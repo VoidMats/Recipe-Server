@@ -4,6 +4,8 @@ import path from "node:path";
 import Fastify from "fastify";
 import staticRouter from "@fastify/static";
 
+import { db } from "./plugins/Mongodb.mjs"
+
 import { hasDockerEnv, hasDockerGroup } from  "./general.mjs";
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));

@@ -30,7 +30,7 @@ export default function readEnvironment(path = ".env") {
                 default: 27017,
                 description: "Port for mongo database"
             },
-            MONGO_NAME: {
+            MONGO_DATABASE: {
                 type: "string",
                 description: "Name of mongo database"
             },
