@@ -75,7 +75,10 @@ const db = fastifyPlugin(
 
         console.log("  - All database schemas was read from folder");
 
-        fastify.addHook("onClose", () => client.close());
+        fastify.addHook("onClose", () => {
+            console.log("==> Closing database")
+            client.close()
+        });
 
         fastify.decorate("mongo", { db, client, setting });
     },

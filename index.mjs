@@ -8,7 +8,7 @@ const start = async () => {
     fastify.listen({ port: config.SERVER_PORT, host: "0.0.0.0" }, async (error, address) => {
         if (error) {
             console.error(error);
-            process.exit(2);
+            fastify.close();
         }
         console.log(`    Server is listening on ${address}`);
     });

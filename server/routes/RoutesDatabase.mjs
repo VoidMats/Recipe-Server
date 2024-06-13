@@ -1,7 +1,6 @@
-const { ObjectId } = require("mongodb");
+import { ObjectId } from "mongodb";
 
-const { getObjectId } = require("../../utils");
-const { FILE_BUCKET_NAME } = require("../plugins/Mongodb.mjs");
+import { __FILE_BUCKET_NAME } from "../plugins/Mongodb.mjs";
 
 export default async (fastify) => {
 
@@ -13,7 +12,7 @@ export default async (fastify) => {
             }
             // Check for existing file
             const existingFile = await fastify.mongo.db
-                .collection(`${FILE_BUCKET_NAME}.files`)
+                .collection(`${__FILE_BUCKET_NAME}.files`)
                 .findOne({ "metadata.id": id });
             if (existingFile) {
                 return reject(httpError(403, `A file with id ${id} already exists.`));

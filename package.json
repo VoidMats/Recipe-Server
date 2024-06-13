@@ -12,6 +12,7 @@
   "dependencies": {
     "env-schema": "^5.2.1",
     "fastify": "^4.27.0",
+    "fastify-graceful-shutdown": "^3.5.3",
     "mongodb": "^6.6.2",
     "mongodb-uri": "^0.9.7"
   }

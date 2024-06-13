@@ -3,6 +3,7 @@ import path from "node:path";
 
 import Fastify from "fastify";
 import staticRouter from "@fastify/static";
+import fastifyGracefulShutdown from "fastify-graceful-shutdown";
 
 import { db } from "./plugins/Mongodb.mjs"
 
@@ -35,6 +36,7 @@ export default function createServer(config) {
     fastify.decorate("config", CONFIG);
 
     console.log("==> Register plugins");
+    fastify.register(fastifyGracefulShutdown);
     fastify.register(db, config);
 
     fastify.register(staticRouter, {
@@ -46,6 +48,14 @@ export default function createServer(config) {
         root: path.join(__dirname, "../public"),
         prefix: "/public",
         decorateReply: false
+    });
+
+    console.log("==> Register ");
+    fastify.after(() => {
+        fastify.gracefulShutdown((signal, next) => {
+            console.log(`==> Received signal to shutdown: ${signal}`);
+            next();
+        });
     });
 
     console.log("==> Register routes");
