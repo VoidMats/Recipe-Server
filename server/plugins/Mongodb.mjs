@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import fastifyPlugin from "fastify-plugin";
-import { MongoClient, MongoError } from "mongodb";
+import { MongoClient, MongoError, GridFSBucket } from "mongodb";
 import mongodbURI from "mongodb-uri";
 
 const __FILE_BUCKET_NAME = "__image_filebucket";
@@ -25,15 +25,12 @@ const db = fastifyPlugin(
                 authSource: config.MONGO_AUTH
             }
         }
-        const setting = {
-            url: mongodbURI.format(uri),
-            options: {
-                family: (config.MONGO_FAMILY) ? config.MONGO_FAMILY : 4
-            },
-            collections: new Map()
-        }
+        const url = mongodbURI.format(uri);
+        const options = {
+            family: config.MONGO_FAMILY
+        };
 
-        const client = new MongoClient(setting.url, setting.options);
+        const client = new MongoClient(url, options);
         await client.connect();
         const db = client.db();
         const info = await db.command({ whatsmyuri: 1});
@@ -46,18 +43,19 @@ const db = fastifyPlugin(
             process.exit(2);
         };
         const pathSchemas = await promises.readdir(pathComplete);
-        try {
-            for (const pathSchema of pathSchemas) {
-                const name = path.basename(pathSchema).split(".")[0];
-                const schema = JSON.parse(readFileSync(path.join(pathComplete, pathSchema)));
-                setting.collections.set(name, schema);
+    
+        let fileBucket;
+        for (const pathSchema of pathSchemas) {
+            let name = path.basename(pathSchema).split(".")[0];
+            const schema = JSON.parse(readFileSync(path.join(pathComplete, pathSchema)));
+            
+            // Check for filebucket
+            if (name === "file") {
+                name = `${__FILE_BUCKET_NAME}.files`;
+                fileBucket = new GridFSBucket(db, { bucketName: __FILE_BUCKET_NAME });
             }
-        } catch(error) {
-            console.error(error);
-            process.exit(2);
-        }
-        // Add collections to databases if missing
-        for (const [name, schema] of setting.collections) {
+
+            // Add collection to database if missing
             try {
                 await db.command({ collMod: name, validator: { $jsonSchema: schema }});
             } catch(error) {
@@ -68,11 +66,12 @@ const db = fastifyPlugin(
                         validator: { $jsonSchema: schema },
                     });
                 } else {
-                    throw error;
+                    console.error(error);
+                    process.exit(2);
                 }
             }
         }
-
+        
         console.log("  - All database schemas was read from folder");
 
         fastify.addHook("onClose", () => {
@@ -80,7 +79,7 @@ const db = fastifyPlugin(
             client.close()
         });
 
-        fastify.decorate("mongo", { db, client, setting });
+        fastify.decorate("mongo", { db, client, fileBucket });
     },
     {
         name: "mongo"

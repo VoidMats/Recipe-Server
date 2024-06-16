@@ -1,8 +1,13 @@
 import { ObjectId } from "mongodb";
+import { httpError } from "http-errors";
 
 import { __FILE_BUCKET_NAME } from "../plugins/Mongodb.mjs";
 
 export default async (fastify) => {
+
+    const _validateObjectId = (id) => {
+        return (ObjectId.isValid(id)) ? id : ObjectId(id);
+    }
 
     const handleUploadFile = async (id, request) => {
         return new Promise(async (resolve, reject) => {
@@ -18,27 +23,16 @@ export default async (fastify) => {
                 return reject(httpError(403, `A file with id ${id} already exists.`));
             }
             // Add new file
-            let metadata;
+            let metadata = { id, created: new Date() };
             try {
                 metadata = JSON.parse(request.query.metadata ?? "{}");
             } catch (error) {
                 return reject(httpError(400, `Invalid metadata: ${error}`));
             }
-            for (const key in metadata) {
-                if (key === "__foran") {
-                    return reject(httpError(400, `metadata cannot contain the key "__foran"`));
-                }
-            }
-            const now = new Date();
-            metadata.__foran = {
-                created: now,
-                createdBy: new ObjectId(request.userId),
-            };
+            // Upload file to filebucket
             const stream = await fastify.mongo.fileBucket.openUploadStream(filename, { metadata });
             stream.on("error", async (error) => {
-                console.log(
-                    `GridFS upload stream failed. Calling abort to delete chunks. (reason: ${error})`,
-                );
+                console.error(`GridFS upload stream failed. Calling abort to delete chunks. (reason: ${error})`);
                 try {
                     await stream.abort();
                 } catch (abortError) {
@@ -48,11 +42,11 @@ export default async (fastify) => {
             });
             stream.on("finish", async (object) => {
                 try {
-                    await fastify.mongo.db.collection(`${FILE_BUCKET_NAME}.files`).updateOne(
+                    await fastify.mongo.db.collection(`${__FILE_BUCKET_NAME}.files`).updateOne(
                         { _id: object._id },
                         {
                             $set: {
-                                "metadata.__foran.id": id,
+                                "metadata.id": id,
                             },
                         },
                     );
@@ -73,16 +67,11 @@ export default async (fastify) => {
         return handleUploadFile(id, request);
     });
 
-    fastify.post("/files/:id", async (request) => {
-        const id = getObjectId(request.params.id);
-        return handleUploadFile(id, request);
-    });
-
     fastify.get("/files/:id", async (request) => {
-        const id = getObjectId(request.params.id);
+        const id = _validateObjectId(request.params.id);
         const file = await fastify.mongo.db
-            .collection(`${FILE_BUCKET_NAME}.files`)
-            .findOne({ "metadata.__foran.id": id });
+            .collection(`${__FILE_BUCKET_NAME}.files`)
+            .findOne({ "metadata.id": id });
         if (!file) {
             throw httpError(404, `File ${id} not found`);
         }
@@ -90,13 +79,15 @@ export default async (fastify) => {
     });
 
     fastify.get("/files/:id/download", async (request) => {
-        const id = getObjectId(request.params.id);
+        const id = _validateObjectId(request.params.id);
         const file = await fastify.mongo.db
-            .collection(`${FILE_BUCKET_NAME}.files`)
-            .findOne({ "metadata.__foran.id": id });
+            .collection(`${__FILE_BUCKET_NAME}.files`)
+            .findOne({ "metadata.id": id });
         if (!file) {
             throw httpError(404, `File ${id} not found`);
         }
         return fastify.mongo.fileBucket.openDownloadStream(file._id);
     });
+
+    
 };
