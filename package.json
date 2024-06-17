@@ -8,8 +8,8 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build --detailed-report",
-    "build-no-optimize": "parcel build --no-optimize --detailed-report",
+    "build": "parcel build src/index.html --detailed-report --reporter @parcel/reporter-bundle-analyzer",
+    "build-no-optimize": "parcel build src/index.html --no-optimize --detailed-report --reporter @parcel/reporter-bundle-analyzer",
     "server": "node server.mjs"
   },
   "dependencies": {
@@ -18,7 +18,8 @@
     "fastify-graceful-shutdown": "^3.5.3",
     "http-errors": "^2.0.0",
     "mongodb": "^6.6.2",
-    "mongodb-uri": "^0.9.7"
+    "mongodb-uri": "^0.9.7",
+    "purecss": "^3.0.0"
   },
   "devDependencies": {
     "@parcel/reporter-bundle-analyzer": "^2.12.0",
