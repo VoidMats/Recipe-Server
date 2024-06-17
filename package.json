@@ -2,12 +2,15 @@
   "name": "server-recipe",
   "version": "0.0.1",
   "description": "Server to store/edit/add recipes",
-  "main": "index.js",
   "repository": "git@github.com:VoidMats/server-recipe.git",
   "author": "Mats Eriksson <mats.eriksson.ingemar@gmail.com>",
   "license": "MIT",
+  "source": "src/index.html",
   "scripts": {
-    "start": "node index.mjs"
+    "start": "parcel",
+    "build": "parcel build --detailed-report",
+    "build-no-optimize": "parcel build --no-optimize --detailed-report",
+    "server": "node server.mjs"
   },
   "dependencies": {
     "env-schema": "^5.2.1",
@@ -16,5 +19,9 @@
     "http-errors": "^2.0.0",
     "mongodb": "^6.6.2",
     "mongodb-uri": "^0.9.7"
+  },
+  "devDependencies": {
+    "@parcel/reporter-bundle-analyzer": "^2.12.0",
+    "parcel": "^2.12.0"
   }
 }
