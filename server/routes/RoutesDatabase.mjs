@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { httpError } from "http-errors";
 
+// Move this to decorate
 import { __FILE_BUCKET_NAME } from "../plugins/Mongodb.mjs";
 
 export default async (fastify) => {
@@ -51,8 +52,7 @@ export default async (fastify) => {
                         },
                     );
                     resolve({ id });
-                } catch (error) /* istanbul ignore next: This should only happen if the connection
-                                   to the database dies or something similar. Hard to test. */ {
+                } catch (error) {
                     console.error(`Error updating metadata for file ${id}: ${error}`);
                     console.error(error);
                     return reject(httpError(500, error));
@@ -62,12 +62,12 @@ export default async (fastify) => {
         });
     };
 
-    fastify.post("/files", async (request) => {
+    fastify.post("/file", async (request) => {
         const id = new ObjectId();
         return handleUploadFile(id, request);
     });
 
-    fastify.get("/files/:id", async (request) => {
+    fastify.get("/file/:id", async (request) => {
         const id = _validateObjectId(request.params.id);
         const file = await fastify.mongo.db
             .collection(`${__FILE_BUCKET_NAME}.files`)
@@ -78,7 +78,7 @@ export default async (fastify) => {
         return file;
     });
 
-    fastify.get("/files/:id/download", async (request) => {
+    fastify.get("/file/:id/download", async (request) => {
         const id = _validateObjectId(request.params.id);
         const file = await fastify.mongo.db
             .collection(`${__FILE_BUCKET_NAME}.files`)

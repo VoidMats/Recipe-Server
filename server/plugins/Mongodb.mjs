@@ -6,6 +6,7 @@ import fastifyPlugin from "fastify-plugin";
 import { MongoClient, MongoError, GridFSBucket } from "mongodb";
 import mongodbURI from "mongodb-uri";
 
+// TODO Move this to decorate
 const __FILE_BUCKET_NAME = "__image_filebucket";
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
