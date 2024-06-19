@@ -7,11 +7,28 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch Server",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/js/Client.js"
+            "program": "${workspaceFolder}/server.mjs"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Debug on Chrome",
+            "url": "http://localhost:1234/",
+            "webRoot": "${workspaceFolder}/src"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "vuejs: chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}/src",
+            "sourceMapPathOverrides": {
+              "webpack:///src/*": "${webRoot}/*"
+            }
         }
     ]
 }

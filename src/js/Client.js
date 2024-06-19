@@ -1,15 +1,17 @@
+import 'purecss/build/pure.css';
+
 import { API } from "./API";
-import { ButtonGeneral } from "./ButtonGeneral";
+import { ButtonAPI } from "./Buttons";
 
 class Client {
 
     constructor() {
         this._api = new API();
-        this._button = new ButtonGeneral(this._api);
+        this._button = new ButtonAPI("testButton", "primary", "xlarge", this._api);
     }
 
     init() {
-        this._button.addClickEvent("testButton");
+        this._button.addClickEvent();
     }
 
 }
