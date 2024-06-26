@@ -6,7 +6,10 @@ import { ButtonAPI } from "./Buttons";
 class Client {
 
     constructor() {
-        this._api = new API();
+        this._api = new API("none");
+        // Sidebar
+        
+        // Buttons
         this._button = new ButtonAPI("testButton", "primary", "xlarge", this._api);
     }
 

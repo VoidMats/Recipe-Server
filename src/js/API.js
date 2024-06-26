@@ -5,14 +5,19 @@ export class API {
      * 
      * @param {*} auth 
      */
-    constructor(auth) {
+    constructor(auth = "none") {
         this._token = null; // This will be the general token/session 
         this._auth = auth;
+        this.location = document.location
     }
 
-    async fetch(method, url, payload) {
+    async fetch(method, url, payload, signal) {
         const headers = {};
         const options = {};
+
+        if (signal !== null) {
+            options["signal"] = signal;
+        }
 
         if (auth === "basic") {
             headers["Authorization"] = `Bearer ${this._token}`;
@@ -26,12 +31,17 @@ export class API {
             headers["Content-Type"] = "application/json";
         }
         options['headers'] = headers;
-
-        const response = await fetch(method, url);
+        
+        try {
+            const response = await fetch(url, options);
+            return this._checkStatus(response);
+        } catch(error) {
+            console.log(error);
+        }
     }
 
     async _checkStatus(response) {
-        if (200 <= response.status && response.status <= 204) {
+        if (response.ok) {
             const type = (response.headers) ? response.headers.get("Content-Type") : undefined;
             switch (type) {
                 case "application/json; charset=utf-8":

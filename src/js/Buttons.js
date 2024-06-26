@@ -4,6 +4,8 @@ export class Button {
 
     constructor(id, type, size) {
         this._id = id;
+        this._type = type;
+        this._size = size;
         this._button = document.getElementById(id);
         
         this._class = "";
@@ -71,7 +73,7 @@ export class ButtonAPI extends Button {
         super.addClickEvent((event) => {
             console.log("working");
             console.log(event);
-            this._api.fetch("GET", url)
+            this._api.fetch("GET", url);
         });
     }
 }
