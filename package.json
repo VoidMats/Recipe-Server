@@ -13,13 +13,13 @@
     "server": "node server.mjs"
   },
   "dependencies": {
+    "@picocss/pico": "^2.0.6",
     "env-schema": "^5.2.1",
     "fastify": "^4.27.0",
     "fastify-graceful-shutdown": "^3.5.3",
     "http-errors": "^2.0.0",
     "mongodb": "^6.6.2",
-    "mongodb-uri": "^0.9.7",
-    "purecss": "^3.0.0"
+    "mongodb-uri": "^0.9.7"
   },
   "devDependencies": {
     "@parcel/reporter-bundle-analyzer": "^2.12.0",

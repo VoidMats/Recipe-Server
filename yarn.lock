@@ -813,6 +813,11 @@
     "@parcel/utils" "2.12.0"
     nullthrows "^1.1.1"
 
+"@picocss/pico@^2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@picocss/pico/-/pico-2.0.6.tgz#16e6d253366ab245e67bac6faa95a45edcac4124"
+  integrity sha512-/d8qsykowelD6g8k8JYgmCagOIulCPHMEc2NC4u7OjmpQLmtSetLhEbt0j1n3fPNJVcrT84dRp0RfJBn3wJROA==
+
 "@swc/core-darwin-arm64@1.6.1":
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/@swc/core-darwin-arm64/-/core-darwin-arm64-1.6.1.tgz#72d861fb7094b7a0004f4f300e2c5d4ea1549d9e"
@@ -1862,11 +1867,6 @@ punycode@^2.1.0, punycode@^2.3.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
-
-purecss@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/purecss/-/purecss-3.0.0.tgz#899ffd6859bf18272caa3469bb67206c11be961c"
-  integrity sha512-IdYbGwbmuA7Hy9ACIO1q7ks4xGLcJSVHxJT2BXIz2c4Ve1aSrNU5bAzA1ILT4Gmdy5K59ruWoRPf9WvJZU5fbA==
 
 quick-format-unescaped@^4.0.3:
   version "4.0.4"
