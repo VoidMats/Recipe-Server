@@ -75,8 +75,7 @@ export class API {
                 timestamp: new Date().toLocaleString(),
                 success: false,
                 code: 401,
-                error: `${response.statusText} - User does not have access to SplanAPI or plan.`,
-                message: `SplanAPI ready: ${this.ready()}. Token refreshed.`
+                error: `${response.statusText} - `,
             }
             return answer;
         } else if (response.status >= 400) {
@@ -86,6 +85,7 @@ export class API {
                 code: response.status,
                 error: response.statusText
             }
+            // TODO this is not correct
             const msg = `<== Error: ${response.url} - ${response.status} - ${response.statusText}`
             const type = (response.headers) ? response.headers.get("content-type") : undefined;
             console.error(msg);
