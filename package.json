@@ -21,7 +21,8 @@
     "http-errors": "^2.0.0",
     "jsdom": "^24.1.0",
     "mongodb": "^6.6.2",
-    "mongodb-uri": "^0.9.7"
+    "mongodb-uri": "^0.9.7",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@parcel/reporter-bundle-analyzer": "^2.12.0",

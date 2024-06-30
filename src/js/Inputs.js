@@ -20,7 +20,8 @@ export class InputAPI extends Input {
             event.preventDefault();
             
             // Send url to backend
-            const urlRecipe = document.getElementById("parse-url");
+            const urlRecipe = document.getElementById("parse-url").value;
+            console.log(urlRecipe);
             const urlServer = `${this._api.backend}/v1/${this._route}`;
             const payload = {
                 url: urlRecipe
