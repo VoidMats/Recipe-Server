@@ -3,6 +3,7 @@ import path from "node:path";
 
 import Fastify from "fastify";
 import staticRouter from "@fastify/static";
+import cors from "@fastify/cors";
 import fastifyGracefulShutdown from "fastify-graceful-shutdown";
 
 import { db } from "./plugins/Mongodb.mjs";
@@ -41,6 +42,9 @@ export default function createServer(config) {
     console.log("==> Register plugins");
     fastify.register(fastifyGracefulShutdown);
     fastify.register(db, config);
+    fastify.register(cors, { 
+        origin: true
+    });
 
     fastify.register(staticRouter, {
         root: path.join(__dirname, "../build"),
