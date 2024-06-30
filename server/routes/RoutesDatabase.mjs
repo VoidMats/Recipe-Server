@@ -1,5 +1,7 @@
+import pkg from 'http-errors';
 import { ObjectId } from "mongodb";
-import { httpError } from "http-errors";
+
+const { httpError } = pkg;
 
 // Move this to decorate
 import { __FILE_BUCKET_NAME } from "../plugins/Mongodb.mjs";

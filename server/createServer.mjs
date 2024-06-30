@@ -5,7 +5,9 @@ import Fastify from "fastify";
 import staticRouter from "@fastify/static";
 import fastifyGracefulShutdown from "fastify-graceful-shutdown";
 
-import { db } from "./plugins/Mongodb.mjs"
+import { db } from "./plugins/Mongodb.mjs";
+import RoutesPages from "./routes/RoutesPages.mjs";
+import RoutesDatabase from "./routes/RoutesDatabase.mjs";
 
 import { hasDockerEnv, hasDockerGroup } from  "./general.mjs";
 
@@ -17,6 +19,7 @@ export default function createServer(config) {
     const SETTING = {
         runningInProduction: process.env.NODE_ENV || "development",
         runningInContainer: hasDockerEnv() || hasDockerGroup(),
+        printRoutes: config.PRINT_ROUTES
     };
 
     const CONFIG = {  //Freeze ??
@@ -25,7 +28,7 @@ export default function createServer(config) {
         pluginTimeout: 20000,
         trustProxy: (SETTING.runningInProduction) ? true : false    // Will trust X-Forwarded-* headers
     };
-    const fastify = Fastify(Object.assign(CONFIG, config));
+    const fastify = Fastify(CONFIG);
 
     console.log("==> Add content parser")
     fastify.addContentTypeParser("application/octet-stream", (_, payload, done) => {
@@ -33,7 +36,7 @@ export default function createServer(config) {
     });
 
     console.log("==> Register decorators");
-    fastify.decorate("config", CONFIG);
+    fastify.decorate("config", Object.assign(CONFIG, config));
 
     console.log("==> Register plugins");
     fastify.register(fastifyGracefulShutdown);
@@ -50,7 +53,7 @@ export default function createServer(config) {
         decorateReply: false
     });
 
-    console.log("==> Register ");
+    console.log("==> Register hooks");
     fastify.after(() => {
         fastify.gracefulShutdown((signal, next) => {
             console.log(`==> Received signal to shutdown: ${signal}`);
@@ -58,7 +61,17 @@ export default function createServer(config) {
         });
     });
 
+    fastify.addHook("onReady", async () => {
+        console.log("==> Server is ready...");
+
+        if (SETTING.printRoutes) {
+            console.log("Print routes")
+            console.log(fastify.printRoutes());
+        }
+    });
+
     console.log("==> Register routes");
+    fastify.register(RoutesPages, { prefix: "/v1/parse"});
 
     return fastify;
 }

@@ -10,6 +10,11 @@ export default function readEnvironment(path = ".env") {
                 default: 7090,
                 description: "Port number on the server"
             },
+            PRINT_ROUTES: {
+                type: "boolean",
+                default: false,
+                description: "Will print server routes in logger during startup"
+            },
             MONGO_USERNAME: {
                 type: "string",
                 default: "",
