@@ -23,7 +23,7 @@ export default function createServer(config) {
     };
 
     const CONFIG = {  //Freeze ??
-        logger: false,
+        logger: true,
         bodyLimit: 1024 * 1024,                                     // 1 mb
         pluginTimeout: 20000,
         trustProxy: (SETTING.runningInProduction) ? true : false    // Will trust X-Forwarded-* headers
@@ -65,8 +65,9 @@ export default function createServer(config) {
         console.log("==> Server is ready...");
 
         if (SETTING.printRoutes) {
-            console.log("Print routes")
+            console.log("=== Print routes ===");
             console.log(fastify.printRoutes());
+            console.log("====================");
         }
     });
 

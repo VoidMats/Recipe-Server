@@ -4,6 +4,7 @@ import { ButtonAPI } from "./Buttons";
 import { InputAPI } from "./Inputs";
 import { LinkPage } from './Links';
 
+
 class Client {
 
     constructor() {
@@ -23,7 +24,7 @@ class Client {
     }
 
     init() {
-        this._button.addClickEvent();
+        this._btnTest.addClickEvent();
         this.__navbar.forEach((id) => {
             if (id === "home") return true;
             const div = document.getElementById(`content-${id}`);

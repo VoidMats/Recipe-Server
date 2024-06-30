@@ -1,4 +1,6 @@
-
+import 'dotenv/config';
+//import dotenv from "dotenv";
+const test = import.meta.url;
 
 export class API {
     /**
@@ -8,22 +10,26 @@ export class API {
     constructor(auth = "none") {
         this._token = null; // This will be the general token/session 
         this._auth = auth;
-        this.location = document.location
+        this.location = document.location;
+        this.port = process.env.SERVER_PORT;
+        const http = /(https?:\/\/.*)(:\d*)\/?(.*)/.exec(document.location.origin)[1];
+        this.backend = `${http}:${7090}`;
+        console.log(this.location);
+        console.log(this.backend);
+        console.log(this.port);
+        console.log(process.env.SERVER_PORT);
+        console.log(test);
+        //console.log(dotenv.config())
     }
 
     async fetch(method, url, payload, signal) {
         const headers = {};
         const options = {};
 
-        if (signal !== null) {
-            options["signal"] = signal;
-        }
-
-        if (auth === "basic") {
-            headers["Authorization"] = `Bearer ${this._token}`;
-        }
-       
         options["method"] = method.toUpperCase();
+
+        if (signal !== null) options["signal"] = signal;
+        if (this._auth === "basic") headers["Authorization"] = `Bearer ${this._token}`;
         if (this._httpsAgent) method["agent"] = this._httpsAgent;
         
         if (payload) {

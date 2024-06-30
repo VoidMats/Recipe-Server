@@ -21,12 +21,15 @@ export class InputAPI extends Input {
             
             // Send url to backend
             const urlRecipe = document.getElementById("parse-url");
-            const urlServer = `${document.location.origin}/${this._route}`;
-            const body = {
+            const urlServer = `${this._api.backend}/v1/${this._route}`;
+            const payload = {
                 url: urlRecipe
             }
-            const result = await this._api.fetch("POST", urlServer);
+            const result = await this._api.fetch("POST", urlServer, payload);
             // Check result and report back to user
+            if (result) {
+
+            }
         });
 
     }

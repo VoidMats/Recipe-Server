@@ -8,7 +8,7 @@ export default async (fastify) => {
 
         let html, doc, answer;
         try {
-            const html = await fetch(request.body.url); 
+            html = await fetch(request.body.url); 
         } catch(error) {
             console.log(error);
         }
