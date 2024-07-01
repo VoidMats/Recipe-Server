@@ -24,6 +24,12 @@
                 "type": "string"
             }
         },
+        "score": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "Score from 1-10"
+        },
         "servings": {
             "type": "number",
             "description": "Number of servings of the recipe"
