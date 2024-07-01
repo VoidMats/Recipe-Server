@@ -2,8 +2,7 @@
     "type": "object",
     "required": [
         "_id",
-        "sourceId",
-        "collectionId"
+        "title"
     ],
     "properties": {
         "_id": {
@@ -15,20 +14,18 @@
         },
         "description": {
             "type": "string",
-            "description": ""
+            "description": "Description of the recipe"
+        },
+        "time": {
+            "type": "string",
+            "description": "Cooking time of the recipe. This is a string, because so many recipes has different time"
         },
         "keywords": {
             "type": "array",
-            "description": "",
+            "description": "Keywords for the recipe",
             "items": {
                 "type": "string"
             }
-        },
-        "score": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 10,
-            "description": "Score from 1-10"
         },
         "servings": {
             "type": "number",
@@ -41,7 +38,7 @@
                 "properties": {
                     "name": {
                         "type": "string",
-                        "description": ""
+                        "description": "Name of the sub-meal of the recipe"
                     },
                     "ingredients": {
                         "type": "array",
@@ -101,6 +98,22 @@
                             "description": ""
                         }
                     }
+                }
+            }
+        },
+        "user": {
+            "type": "object",
+            "description": "Metadata for the user",
+            "properties": {
+                "score": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 10,
+                    "description": "Score from 1-10"
+                },
+                "comment": {
+                    "type": "string",
+                    "description": "User comment"
                 }
             }
         }
