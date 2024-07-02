@@ -75,6 +75,11 @@ const db = fastifyPlugin(
         
         console.log("  - All database schemas was read from folder");
 
+        console.log("  - Add methods to db");
+        db.readError = (error) => {
+            return error.errorResponse;
+        }
+
         fastify.addHook("onClose", () => {
             console.log("==> Closing database")
             client.close()

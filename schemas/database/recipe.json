@@ -46,12 +46,12 @@
                             "type": "object",
                             "properties": {
                                 "size": {
-                                    "type": "number",
-                                    "description": "" 
+                                    "type": "string",
+                                    "description": "This value will tell how many/size/volume is needed in the recipe" 
                                 },
                                 "unit": {
                                     "type": "string",
-                                    "description": "",
+                                    "description": "Unit of the ingredient's value",
                                     "enum": [
                                         "st",
                                         "pcs",
@@ -68,7 +68,9 @@
                                         "msk",
                                         "packet",
                                         "knippa",
-                                        "knippa(or)"
+                                        "knippa(or)",
+                                        "nypa",
+                                        "nypa(or)"
                                     ]
                                 },
                                 "ingredient": {
