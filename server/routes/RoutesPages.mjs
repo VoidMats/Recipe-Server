@@ -56,6 +56,7 @@ export default async (fastify) => {
             document["title"] = doc.head.querySelector("[name~=title][content]").content;
             document["description"] = doc.head.querySelector("[name~=description][content]").content;
             const spanTime = doc.body.querySelector("span.Recipe_svtmat_recipe__estimateText__4PuMH");
+            document["time"] = "";
             for (const node of spanTime.childNodes) {
                 if (node.textContent) document["time"] += node.textContent;
             }
@@ -70,30 +71,39 @@ export default async (fastify) => {
             document["servings"] = Number(spanServings.textContent);
             // Components
             document["components"] = [];
-            const listIngredients = doc.body.querySelectorAll('ul.Recipe_svtmat_recipe__ingredientsList__b_IqW');
             const listNames = doc.body.querySelectorAll('h3.Recipe_svtmat_recipe__ingredientsSubHeader__HvsWu');
+            const listIngredients = doc.body.querySelector('div.Recipe_svtmat_recipe__ingredientsListContainer__7D03w');
+            const childNodes = listIngredients.children;
+            if (childNodes.length > 0 && childNodes[0].tagName === 'DIV') {
+                listIngredients.removeChild(childNodes[0]);
+            }
             for (let i=0; i<listNames.length; i++) {
                 const obj = { ingredients: [] };
                 const name = listNames[i].textContent;
                 if (name) obj["name"] = name;
-                for (const [idx, ul] of listIngredients.entries()) {
-                    for (const li of ul.childNodes) {
-                        const portion = {};
-                        const size_unit = li.querySelector('span');
-                        if (size_unit) {
-                            const size = size_unit.firstChild?.nodeValue;
-                            portion["size"] = (size) ? size : "";
-                            const unit = size_unit.lastChild?.nodeValue;
-                            portion["unit"] = (unit) ? unit : "";
-                        }
-                        const ingredient = li.lastChild.textContent;
-                        console.log(ingredient)
-                        if (size_unit && ingredient) portion["ingredient"] = ingredient;
-                        obj.ingredients.push(portion);
+                const ul = listIngredients.children[i].children[1];
+                for (const li of ul.childNodes) {
+                    const portion = {};
+                    const size_unit = li.querySelector('span');
+                    if (size_unit) {
+                        const size = size_unit.firstChild?.nodeValue;
+                        portion["size"] = (size) ? size : "";
+                        const unit = size_unit.lastChild?.nodeValue;
+                        portion["unit"] = (unit) ? unit : "";
                     }
+                    const ingredient = li.lastChild.textContent;
+                    if (size_unit && ingredient) portion["ingredient"] = ingredient;
+                    obj.ingredients.push(portion);
                 }
                 document.components.push(obj);
             };
+            // Instructions
+            document["instructions"] = [{ name: "Så lagar du", step: [] }];
+            const listInstructions = doc.body.querySelector('div.Recipe_svtmat_recipe__instructionsContainer__oohtS');
+            for (const li of listInstructions.firstChild.childNodes) {
+                document.instructions[0].step.push(li.textContent);
+            }
+
             // Set 'found' to high, not trigger default 
             return true;
         } catch(error) {
