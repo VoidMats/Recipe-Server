@@ -11,6 +11,7 @@ export class Link {
     }
 }
 
+// TODO Call this LinkNavbar 
 export class LinkPage extends Link {
 
     constructor(navbar, id, idPage) {
@@ -31,7 +32,7 @@ export class LinkPage extends Link {
             event.preventDefault();
 
             this._navbar.forEach((id) => {
-                const div = document.getElementById(`content-${id}`);
+                const div = document.getElementById(`${id}-content`);
                 div.hidden = true;
             });
             const div = document.getElementById(this._idPage);

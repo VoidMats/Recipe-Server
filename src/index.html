@@ -29,7 +29,7 @@
   </header>
   <!-- Main of body -->
   <main class="container">
-    <div class="content" id="content-home">
+    <div id="home-content" class="content" >
       <h1>Cookbook</h1>
       <h2>Recipe database </h2>
       <h2 class="content-subhead">Why this database exist</h2>
@@ -81,11 +81,15 @@
       </p>
     </div>
     <!-- Body search -->
-    <div class="content" id="content-search">
+    <div id="search-content" class="content" >
       <h2>Search</h2>
+      <form>
+        <input id="search-input" type="search" name="search" placeholder="Search" aria-label="Search" />
+        <div id="search-grid" class="grid"></div>
+      </form>
     </div>
     <!-- Body parse -->
-    <div class="content" id="content-parse">
+    <div id="parse-content" class="content">
       <h2>Parse recipe from url</h2>
       <form>
         <input id="parse-url" type="url" name="url" placeholder="Url" aria-label="Url" />
@@ -93,11 +97,11 @@
       </form>
     </div>
     <!-- Body add -->
-    <div class="content" id="content-add">
+    <div id="add-content" class="content" >
       <h2 class="content-subhead">Add recipe</h2>
     </div>
     <!-- Body delete -->
-    <div class="content" id="content-delete">
+    <div id="delete-content" class="content" >
       <h2 class="content-subhead">Delete recipe</h2>
     </div>
     <script type="module" src="./js/App.js"></script>
