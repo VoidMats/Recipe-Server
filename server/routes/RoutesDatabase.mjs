@@ -5,11 +5,32 @@ const { httpError } = pkg;
 
 // Move this to decorate
 import { __FILE_BUCKET_NAME } from "../plugins/Mongodb.mjs";
+import createHttpError from 'http-errors';
 
 export default async (fastify) => {
 
     const _validateObjectId = (id) => {
         return (ObjectId.isValid(id)) ? id : ObjectId(id);
+    }
+
+    const _createAnswer = (success = false, result, error) => {
+        const answer = { 
+            timestamp: new Date().toLocaleDateString(), 
+            success: success,
+            result: undefined,
+            code: undefined,
+            error: undefined  
+        };
+        if (result) {
+            answer.result = result;
+            answer.code = 200;
+            answer.error = "No error";
+        }
+        if (error) {
+            answer.code = error.statusCode;
+            answer.error = `${error.code} - ${error.message}`;
+        }
+        return answer;
     }
 
     const handleUploadFile = async (id, request) => {
@@ -91,5 +112,46 @@ export default async (fastify) => {
         return fastify.mongo.fileBucket.openDownloadStream(file._id);
     });
 
-    
+    // Recipe routes
+
+    /**
+     * 
+     * @returns { { acknowleged, insertedId } } 
+     */
+    fastify.post("/recipe", async (request) => {
+        const document = request.body;
+        document._id = _validateObjectId(document._id);
+        try {
+            const dbAnswer = await fastify.mongo.db.collection("recipe").insertOne(document);
+            return _createAnswer(true, dbAnswer);
+        } catch(error) {
+            return createHttpError(500, error);
+        }
+    });
+
+    fastify.get("/recipe/:id", async (request) => {
+        const id = _validateObjectId(request.params.id);
+        const recipe = await fastify.mongo.db.collection("recipe").findOne({ _id: id });
+        if (!recipe) {
+            const error = createHttpError(404, `Recipe ${id} not found`);
+            return _createAnswer(false, undefined, error);
+        }
+        return _createAnswer(true, recipe);
+    });
+
+
+    fastify.get("/recipe/search", async (request) => {
+        const { text } = request.query;
+        const query = { title: { "$regex": `^${text}` } };
+
+        try {
+            const recipes = await fastify.mongo.db.collection("recipe").find(query).toArray();
+            return _createAnswer(true, recipes);
+        } catch(error) {
+            console.error(error);
+            // TODO best would be to use the database plugin return http response
+            return createHttpError(500, error);
+        }
+    });
+
 };

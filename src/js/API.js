@@ -5,21 +5,36 @@ const test = import.meta.url;
 export class API {
     /**
      * 
-     * @param {*} auth 
+     * @param { String } auth 
+     * @param { Object } options { version: String, backend: String }
      */
-    constructor(auth = "none") {
-        this._token = null; // This will be the general token/session 
+    constructor(auth = "none", options = {}) {
+        const { version, backend } = options;
+        this._token = null;
         this._auth = auth;
         this.location = document.location;
         this.port = process.env.SERVER_PORT;
+        this.version = version || "v1";
         const http = /(https?:\/\/.*)(:\d*)\/?(.*)/.exec(document.location.origin)[1];
         this.backend = `${http}:${7090}`;
         console.log(this.location);
         console.log(this.backend);
         console.log(this.port);
-        console.log(process.env.SERVER_PORT);
-        console.log(test);
+        //console.log(process.env.SERVER_PORT);
         //console.log(dotenv.config())
+    }
+
+    createUrl(route, queries = {}) {
+        const url = new URL(this.backend);
+        if (/^\/v\d{1}/.test(route)) {
+            url.pathname = route;
+        } else {
+            url.pathname = `/${this.version}${route}`;
+        }
+        for (const [key, value] of Object.entries(queries)) {
+            url.searchParams.set(key, value);
+        }
+        return url;
     }
 
     async fetch(method, url, payload, signal) {
@@ -28,7 +43,7 @@ export class API {
 
         options["method"] = method.toUpperCase();
 
-        if (signal !== null) options["signal"] = signal;
+        if (signal) options["signal"] = signal;
         if (this._auth === "basic") headers["Authorization"] = `Bearer ${this._token}`;
         if (this._httpsAgent) method["agent"] = this._httpsAgent;
         
@@ -37,10 +52,22 @@ export class API {
             headers["Content-Type"] = "application/json";
         }
         options['headers'] = headers;
-        
+
+        // Validate url
+        let checkedUrl;
+        if (url instanceof URL) {
+            checkedUrl = url;
+        } else {
+            try {
+                checkedUrl = new URL(url);
+            } catch(error) {
+                checkedUrl = new URL(url, `${this.backend}/${this.version}`)
+            }
+        }
+
         try {
-            const response = await fetch(url, options);
-            return this._checkStatus(response);
+            const response = await fetch(checkedUrl, options);
+            return await this._checkStatus(response);
         } catch(error) {
             console.log(error);
         }
@@ -106,5 +133,9 @@ export class API {
             this._counter = 0;
             throw new Error(`<== Unknown error in plugin splan - fetching error: ${response.statusText}`);
         }
+    }
+
+    addAuthorization(username, password) {
+        this._token = btoa(`${username}:${password}`);
     }
 }

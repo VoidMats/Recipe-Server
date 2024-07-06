@@ -10,21 +10,28 @@ export class Grid {
 
 export class GridSearch extends Grid {
 
-    constructor(idGrid, idSearch) {
+    constructor(idGrid, idSearch, api) {
         super(idGrid);
         this._idSearch = idSearch;
+        this._api = api;
         this._search = document.getElementById(idSearch);
 
         // Add listener
-        this._search.addEventListener("keydown", async (event) => {
-            const result = ["test"];
+        this._search.addEventListener("keyup", async (event) => {
+            // this._search.Value
+            const url = this._api.createUrl("/recipe/search", { text: 'K' });
+            const answer = await this._api.fetch("GET", url);
 
-            result.forEach((recipe) => {
-                this._grid.textContent = "";
+            // Remove any card
+            this._grid.textContent = "";
+            answer?.result.forEach((recipe) => {
+                console.log(recipe);
 
                 const card = document.createElement("article");
                 const header = document.createElement("header");
+                header.title = recipe.title;
                 const footer = document.createElement("footer");
+                footer.text = `Servings: ${recipe.servings}, Time: ${recipe.time}`;
 
                 card.appendChild(header);
                 card.appendChild(footer);

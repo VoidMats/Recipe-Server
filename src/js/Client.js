@@ -20,8 +20,7 @@ class Client {
         // Buttons
         this._btnTest = new ButtonAPI("testButton", "primary", "xlarge", this._api);
         // Search page
-        this._search = new GridSearch("search-grid", "search-input");
-        
+        this._search = new GridSearch("search-grid", "search-input", this._api);  
         // Parse page
         this._btnParse = new InputAPI("parse-button", this._api, "parse");
 

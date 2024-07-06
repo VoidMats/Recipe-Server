@@ -77,6 +77,7 @@ export default function createServer(config) {
 
     console.log("==> Register routes");
     fastify.register(RoutesPages, { prefix: "/v1/parse"});
+    fastify.register(RoutesDatabase, { prefix: "/v1"})
 
     return fastify;
 }
