@@ -4,6 +4,7 @@ import { ButtonAPI } from "./Buttons";
 import { InputAPI } from "./Inputs";
 import { LinkPage } from './Links';
 import { GridSearch } from "./Grid";
+import { SwitchDarkMode } from "./Switch";
 
 class Client {
 
@@ -17,6 +18,7 @@ class Client {
         this._linkParse = new LinkPage(this.__navbar, "link-parse", "parse-content");
         this._linkAdd = new LinkPage(this.__navbar, "link-add", "add-content");
         this._lindDelete = new LinkPage(this.__navbar, "link-delete", "delete-content");
+        this._switchDarkMode = new SwitchDarkMode("dark-mode-switch", "html-main");
         // Buttons
         this._btnTest = new ButtonAPI("testButton", "primary", "xlarge", this._api);
         // Search page
