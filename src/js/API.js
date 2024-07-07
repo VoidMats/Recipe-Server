@@ -1,6 +1,6 @@
-import 'dotenv/config';
+//import 'dotenv/config';
 //import dotenv from "dotenv";
-const test = import.meta.url;
+//const test = import.meta.url;
 
 export class API {
     /**

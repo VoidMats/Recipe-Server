@@ -18,23 +18,33 @@ export class GridSearch extends Grid {
 
         // Add listener
         this._search.addEventListener("keyup", async (event) => {
-            // this._search.Value
-            const url = this._api.createUrl("/recipe/search", { text: 'K' });
+            const search = event.target.value;
+            console.log(search);
+            const url = this._api.createUrl("/recipe/search", { text: search });
             const answer = await this._api.fetch("GET", url);
 
             // Remove any card
             this._grid.textContent = "";
             answer?.result.forEach((recipe) => {
-                console.log(recipe);
-
                 const card = document.createElement("article");
+                //card.setAttribute("data-theme","light");
+                
+                // Create header
                 const header = document.createElement("header");
-                header.title = recipe.title;
-                const footer = document.createElement("footer");
-                footer.text = `Servings: ${recipe.servings}, Time: ${recipe.time}`;
-
+                header.textContent = recipe.title;
                 card.appendChild(header);
+
+                // Create body
+                const image = document.createElement("img");
+                //image.src = recipe.image; // Assuming recipe.image contains the URL of the image
+                //image.alt = recipe.title;
+                card.appendChild(image);
+
+                // Create footer
+                const footer = document.createElement("footer");
+                footer.textContent = `Servings: ${recipe.servings}, ${recipe.time}`;
                 card.appendChild(footer);
+
                 this._grid.appendChild(card);
             })
         });

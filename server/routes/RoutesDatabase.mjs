@@ -142,7 +142,7 @@ export default async (fastify) => {
 
     fastify.get("/recipe/search", async (request) => {
         const { text } = request.query;
-        const query = { title: { "$regex": `^${text}` } };
+        const query = { title: { "$regex": `${text}`, "$options": "i" } };
 
         try {
             const recipes = await fastify.mongo.db.collection("recipe").find(query).toArray();
