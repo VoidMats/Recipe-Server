@@ -8,7 +8,8 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "rm -rf .parcel-cache && parcel build src/index.html --detailed-report --reporter @parcel/reporter-bundle-analyzer",
+    "build": "rm -rf .parcel-cache && parcel build src/index.html",
+    "build-report": "parcel build src/index.html --public-url ./ --detailed-report --reporter @parcel/reporter-bundle-analyzer",
     "build-no-optimize": "parcel build src/index.html --no-optimize --detailed-report --reporter @parcel/reporter-bundle-analyzer",
     "server": "node server.mjs"
   },

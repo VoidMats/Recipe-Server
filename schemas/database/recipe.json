@@ -31,6 +31,10 @@
             "type": "number",
             "description": "Number of servings of the recipe"
         },
+        "image": {
+            "type": "string",
+            "description": "Id of the image"
+        },
         "components": {
             "type": "array",
             "items": {
