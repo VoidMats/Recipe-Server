@@ -105,10 +105,63 @@
     <!-- Body add -->
     <div id="add-content" class="content" >
       <h2 class="content-subhead">Add recipe</h2>
+      <form>
+        <fieldset class="grid">
+          <label>Title
+            <input type="text" name="" placeholder="Title of recipe" autocomplete="off" />
+          </label>
+          <label>Time
+            <input type="text" name="" placeholder="Cook/Baking time" autocomplete="off" />
+          </label>
+          <label>Servings
+            <input type="number" name="" placeholder="Number of servings" autocomplete="off" />
+          </label>
+        </fieldset>
+        <fieldset>
+          <label>Description</label>
+          <input name="text" placeholder="Description" size="40" autocomplete="off" />
+        </fieldset>
+        <fieldset class="grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+          <label>Add ingredients to table
+            <input type="text" placeholder="Size/Number" size="10" autocomplete="off" />
+            <input type="text" placeholder="Unit" size="10" autocomplete="off" />
+            <input type="text" placeholder="Ingredient" autocomplete="off" />
+            <input type="button" value="Add to table" />
+          </label>
+        </fieldset>
+        <fieldset>
+          <table class="striped">
+            <thead>
+              <tr>
+                <th scope="col">Size</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Ingredient</th>
+              </tr>
+            </thead>
+            <tbody id="add-table-ingredients">
+
+            </tbody>
+          </table>
+        </fieldset>
+        <fieldset>
+          <label>Add instructions</label>
+          <table class="striped">
+            <thead>
+              <tr>
+                <th scope="col">Instruction</th>
+              </tr>
+            </thead>
+          </table>
+        </fieldset>
+      </form>
     </div>
     <!-- Body delete -->
     <div id="delete-content" class="content" >
       <h2 class="content-subhead">Delete recipe</h2>
+    </div>
+    <!-- Body recipe -->
+    <div id="recipe-content" class="content">
+
     </div>
     <script type="module" src="./js/App.js"></script>
   </main>
