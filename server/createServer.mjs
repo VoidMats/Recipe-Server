@@ -48,12 +48,12 @@ export default function createServer(config) {
 
     fastify.register(staticRouter, {
         root: path.join(__dirname, "../build"),
-        prefix: "/",
+        prefix: "/v1/",
         wildcard: false
     });
     fastify.register(staticRouter, {
         root: path.join(__dirname, "../public"),
-        prefix: "/public",
+        prefix: "/v1/public",
         decorateReply: false
     });
 
