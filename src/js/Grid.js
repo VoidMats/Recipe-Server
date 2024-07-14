@@ -10,24 +10,22 @@ export class Grid {
 
 export class GridSearch extends Grid {
 
-    constructor(idGrid, idSearch, api) {
+    constructor(client, idGrid, idSearch) {
         super(idGrid);
+        this._client = client;
         this._idSearch = idSearch;
         this._search = document.getElementById(idSearch);
-        this._api = api;
 
         // Add listener
         this._search.addEventListener("keyup", async (event) => {
             const search = event.target.value;
-            const url = this._api.createUrl("/recipe/search", { text: search });
-            const answer = await this._api.fetch("GET", url);
+            const url = this._client._api.createUrl("/recipe/search", { text: search });
+            const answer = await this._client._api.fetch("GET", url);
 
             // Remove event listener and any card
-            /*
             for (const card of this._grid.childNodes) {
-                card.removeEventListener
+                card.removeEventListener("click", this.setRecipePage.bind(this._client));
             }
-            */
             this._grid.textContent = "";
 
             answer?.result.forEach((recipe) => {
@@ -42,7 +40,7 @@ export class GridSearch extends Grid {
 
                 // Create body
                 const body = document.createElement("img");
-                body.src = this._api.createUrl("/public/test.png"); // Assuming recipe.image contains the URL of the image
+                body.src = this._client._api.createUrl("/public/test.png"); // Assuming recipe.image contains the URL of the image
                 body.alt = "test-image";                            // recipe.title
                 card.appendChild(body);
 
@@ -52,13 +50,25 @@ export class GridSearch extends Grid {
                 card.appendChild(footer);
 
                 // Create eventlistener
+                card.addEventListener("click", this.setRecipePage.bind(this._client))
 
                 this._grid.appendChild(card);
             });
         });
     }
 
-
+    setRecipePage(event) {
+        console.log("Trigger click on recipe card");
+        for (const id of this.__pages) {
+            const div = document.getElementById(`${id}-content`);
+            if (id === "recipe") {
+                div.hidden = false;
+                const recipe = this._recipe.addRecipeToPage();
+                continue;
+            }
+            div.hidden = true;
+        }
+    }
 
 
 }
