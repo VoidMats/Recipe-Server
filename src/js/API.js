@@ -17,11 +17,6 @@ export class API {
         this.version = version || "v1";
         const http = /(https?:\/\/.*)(:\d*)\/?(.*)/.exec(document.location.origin)[1];
         this.backend = `${http}:${7090}`;
-        console.log(this.location);
-        console.log(this.backend);
-        console.log(this.port);
-        //console.log(process.env.SERVER_PORT);
-        //console.log(dotenv.config())
     }
 
     createUrl(route, queries = {}) {
@@ -91,7 +86,8 @@ export class API {
                 default:
                     return response;
             }
-        } else if (response.status === 401) {
+        } 
+        if (response.status === 401) {
             let answer
             this._counter += 1;
             if (this._counter > 1) {
@@ -111,20 +107,19 @@ export class API {
                 error: `${response.statusText} - `,
             }
             return answer;
-        } else if (response.status >= 400) {
+        } 
+        if (response.status > 401) {
             let errorMessage = {
                 timestamp: new Date().toLocaleString(),
                 success: false,
                 code: response.status,
                 error: response.statusText
             }
-            // TODO this is not correct
-            const msg = `<== Error: ${response.url} - ${response.status} - ${response.statusText}`
+            console.error( `<== Error: ${response.url} - ${response.status} - ${response.statusText}`);
             const type = (response.headers) ? response.headers.get("content-type") : undefined;
-            console.error(msg);
             if (type === "application/json; charset=utf-8" || type === "application/json") {
                 const answer = await response.json();
-                errorMessage.code = answer.errorCode;
+                errorMessage.code = answer.statusCode;
                 errorMessage.error = answer.message;
                 errorMessage["referenceId"] = answer.referenceId;
             }
