@@ -10,8 +10,14 @@ import createHttpError from 'http-errors';
 export default async (fastify) => {
 
     const _validateObjectId = (id) => {
-        return (ObjectId.isValid(id)) ? id : ObjectId(id);
-    }
+        if (id instanceof ObjectId) {
+            return id;
+        }
+        if (ObjectId.isValid(id)) {
+            return new ObjectId(id);
+        }
+        throw new Error('Invalid ObjectId');
+    };
 
     const _createAnswer = (success = false, result, error) => {
         const answer = { 
