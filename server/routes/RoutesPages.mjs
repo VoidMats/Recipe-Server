@@ -2,6 +2,8 @@ import jsdom from "jsdom";
 import fetch from "node-fetch";
 import { ObjectId } from "mongodb";
 
+import RoutesDatabase from "./RoutesDatabase.mjs";
+
 export default async (fastify) => {
 
     fastify.post("/", async (request) => {
@@ -27,10 +29,10 @@ export default async (fastify) => {
         // From SVT
         const svt = doc.head.querySelector('meta[property="og:site_name"][content="SVT recept"]');
         if (svt) {
-            found = _getSVTrecipe(document, doc);
+            found = await _getSVTrecipe(document, doc, request.body.url);
         }
 
-        // From another site
+        // From godare
     
         // Default
         if (found === false) {
@@ -50,7 +52,7 @@ export default async (fastify) => {
 
     // Private methods
 
-    const _getSVTrecipe = (document, doc) => {
+    const _getSVTrecipe = async (document, doc, url) => {
         try {
             // Title, description etc..
             document["title"] = doc.head.querySelector("[name~=title][content]").content;
@@ -59,16 +61,19 @@ export default async (fastify) => {
             document["time"] = "";
             for (const node of spanTime.childNodes) {
                 if (node.textContent) document["time"] += node.textContent;
-            }
+            };
+
             // Keywords
             const listKeywords = doc.body.querySelector("ul.Recipe_svtmat_recipe__tagList__UmBWV");
             document["keywords"] = [];
             for (const li of listKeywords.childNodes) {
                 document.keywords.push(li.firstChild.text);
-            }
+            };
+
             // Servings
             const spanServings = doc.body.querySelector('span.Recipe_svtmat_recipe__portionsText__g1jgI');
             document["servings"] = Number(spanServings.textContent);
+
             // Components
             document["components"] = [];
             const listNames = doc.body.querySelectorAll('h3.Recipe_svtmat_recipe__ingredientsSubHeader__HvsWu');
@@ -97,17 +102,45 @@ export default async (fastify) => {
                 }
                 document.components.push(obj);
             };
+
             // Instructions
             document["instructions"] = [{ name: "Så lagar du", step: [] }];
             const listInstructions = doc.body.querySelector('div.Recipe_svtmat_recipe__instructionsContainer__oohtS');
             for (const li of listInstructions.firstChild.childNodes) {
                 document.instructions[0].step.push(li.textContent);
             }
+            
+            // Picture
+            const divPicture = doc.body.querySelector("div.Recipe_svtmat_recipe__mediaContainer__TUDv5");
+            const imgPicture = divPicture.querySelector("img");
+            console.log(imgPicture.src);
+            console.log(url);
+            //const urlPicture = new URL(url, imgPicture.src);
+            //await _getPicture(urlPicture)
 
             // Set 'found' to high, not trigger default 
             return true;
         } catch(error) {
             console.log(error);
+        }
+    }
+
+    const _getPicture = async (url) => {
+        // Get picture
+        let stream;
+        try {
+            const response = await fetch(url); 
+            if (response.ok) {
+                stream = response.body;
+            }
+        } catch(error) {
+            console.log(error);
+        }
+        // Import picture
+        try {
+            await fastify.mongo.db.collection("file").insertOne(picture);
+        } catch(error) {
+            return createHttpError(500, error);
         }
     }
 

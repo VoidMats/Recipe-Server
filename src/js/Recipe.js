@@ -41,106 +41,122 @@ export class Recipe {
         </div>
      * @param { String } recipeId 
      */
-    addRecipeToPage(recipeId) {
+    async addRecipeToPage(recipeId) {
         // Hide all pages
         this._client.__pages.forEach((id) => {
             const div = document.getElementById(`${id}-content`);
             div.hidden = true;
         });
 
-        // Get container element
-        const root = document.getElementById(this._containerId);
-        root.hidden = false;
+        // Get recipe 
+        const url = this._client._api.createUrl(`/recipe/${recipeId}`);
+        const response = await this._client._api.fetch("GET", url);
+        if (response.success) {
+            console.log(response.result);
+            const recipe = response.result;
 
-        const header = document.createElement('h2');
-        header.className = 'content-subhead';
-        header.textContent = 'Recipe';
+            // Get container element
+            const root = document.getElementById(this._containerId);
+            root.hidden = false;
 
-        const grid1 = document.createElement('div');
-        grid1.className = 'grid';
-        grid1.style.display = 'grid';
-        grid1.style.gridTemplateColumns = 'repeat(4, 1fr)';
-        grid1.style.gap = '1rem';
+            const header = document.createElement('h2');
+            header.className = 'content-subhead';
+            header.textContent = 'Recipe';
 
-        const inputTitles = ['Title', 'Time', 'Servings', 'Keywords'];
-        inputTitles.forEach((title) => {
-            const input = document.createElement('input');
-            input.readOnly = true;
-            input.value = title;
-            grid1.appendChild(input);
-        });
+            const grid1 = document.createElement('div');
+            grid1.className = 'grid';
+            grid1.style.display = 'grid';
+            grid1.style.gridTemplateColumns = 'repeat(4, 1fr)';
+            grid1.style.gap = '1rem';
 
-        const grid2 = document.createElement('div');
-        grid2.className = 'grid';
-        grid2.style.display = 'grid';
-        grid2.style.gridTemplateColumns = 'repeat(2, 1fr)';
-        grid2.style.gap = '0';
+            const inputs = [recipe.title, recipe.time, recipe.servings, recipe.keywords];
+            inputs.forEach((context) => {
+                const input = document.createElement('input');
+                input.readOnly = true;
+                input.value = context;
+                grid1.appendChild(input);
+            });
 
-        const img = document.createElement('img');
-        img.src = '/public/test.png';
-        img.alt = 'Recipe image';
-        img.style.height = '100%';
+            const grid2 = document.createElement('div');
+            grid2.className = 'grid';
+            grid2.style.display = 'grid';
+            grid2.style.gridTemplateColumns = 'repeat(2, 1fr)';
+            grid2.style.gap = '0';
 
-        const descriptionTextarea = document.createElement('textarea');
-        descriptionTextarea.readOnly = true;
-        descriptionTextarea.textContent = 'Some description';
-        descriptionTextarea.style.height = '100%';
+            const img = document.createElement('img');
+            img.src = '/public/test.png';
+            img.alt = 'Recipe image';
+            img.style.height = '100%';
 
-        grid2.appendChild(img);
-        grid2.appendChild(descriptionTextarea);
+            const descriptionTextarea = document.createElement('textarea');
+            descriptionTextarea.readOnly = true;
+            descriptionTextarea.textContent = recipe.description;
+            descriptionTextarea.style.height = '100%';
 
-        const grid3 = document.createElement('div');
-        grid3.className = 'grid';
-        grid3.style.display = 'grid';
-        grid3.style.gridTemplateColumns = 'repeat(2, 1fr)';
-        grid3.style.gap = '0';
+            grid2.appendChild(img);
+            grid2.appendChild(descriptionTextarea);
 
-        const ingredientsDiv = document.createElement('div');
+            const grid3 = document.createElement('div');
+            grid3.className = 'grid';
+            grid3.style.display = 'grid';
+            grid3.style.gridTemplateColumns = 'repeat(2, 1fr)';
+            grid3.style.gap = '0';
 
-        const ingredientsH5 = document.createElement('h5');
-        ingredientsH5.style.paddingTop = '20px';
-        ingredientsH5.textContent = 'Ingredients';
+            // Create the ingredient div
+            const ingDiv = document.createElement('div');
 
-        const ingredientsList = document.createElement('ul');
+            const ingH5 = document.createElement('h5');
+            ingH5.style.paddingTop = '20px';
+            ingH5.textContent = 'Ingredients';
+            ingDiv.appendChild(ingH5);
 
-        const ingredientItems = ['First ingredient', 'Second ingredient'];
-        ingredientItems.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = item;
-        li.style.fontFamily = 'inherit';
-        ingredientsList.appendChild(li);
-        });
+            for (const component of recipe.components) {
+                const ingHeader = document.createElement("p");
+                ingHeader.textContent = component.name;
+                ingDiv.appendChild(ingHeader);
+                
+                const ingList = document.createElement('ul');
+                for (const item of component.ingredients) {
+                    const li = document.createElement('li');
+                    li.textContent = `${item.size} ${item.unit}${(item.size) ? " - " : ""}${item.ingredient}`;
+                    li.style.fontFamily = 'inherit';
+                    ingList.appendChild(li);
+                }
+                ingDiv.appendChild(ingList);
+            }
 
-        ingredientsDiv.appendChild(ingredientsH5);
-        ingredientsDiv.appendChild(ingredientsList);
+            // Create the instruction div
+            const insDiv = document.createElement('div');
 
-        const instructionsDiv = document.createElement('div');
+            const insH5 = document.createElement('h5');
+            insH5.style.paddingTop = '20px';
+            insH5.textContent = 'Instruction';
+            insDiv.appendChild(insH5);
 
-        const instructionsH5 = document.createElement('h5');
-        instructionsH5.style.paddingTop = '20px';
-        instructionsH5.textContent = 'Instruction';
+            for (const instruction of recipe.instructions) {
+                const insHeader = document.createElement("p");
+                insHeader.textContent = instruction.name;
+                insDiv.appendChild(insHeader);
 
-        const instructionsList = document.createElement('ol');
+                const insList = document.createElement('ol');
+                for (const item of instruction.step) {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    li.style.fontFamily = 'inherit';
+                    insList.appendChild(li);
+                }
+                insDiv.appendChild(insList);
+            }
 
-        const instructionItems = ['First instruction', 'Second instruction', 'Third instruction'];
-        instructionItems.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = item;
-        li.style.fontFamily = 'inherit';
-        instructionsList.appendChild(li);
-        });
+            grid3.appendChild(ingDiv);
+            grid3.appendChild(insDiv);
 
-        instructionsDiv.appendChild(instructionsH5);
-        instructionsDiv.appendChild(instructionsList);
-
-        grid3.appendChild(ingredientsDiv);
-        grid3.appendChild(instructionsDiv);
-
-        // Append all elements
-        root.appendChild(header);
-        root.appendChild(grid1);
-        root.appendChild(grid2);
-        root.appendChild(grid3);
+            // Append all elements
+            root.appendChild(header);
+            root.appendChild(grid1);
+            root.appendChild(grid2);
+            root.appendChild(grid3);
+        }
     }
 
     removeRecipeFromPage() {

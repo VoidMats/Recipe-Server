@@ -30,6 +30,7 @@ export class GridSearch extends Grid {
 
             answer?.result.forEach((recipe) => {
                 const card = document.createElement("article");
+                card.id = recipe._id;
                 //card.setAttribute("data-theme","light");
                 //card.setAttribute("class", "article-card")
                 
@@ -57,13 +58,14 @@ export class GridSearch extends Grid {
         });
     }
 
-    setRecipePage(event) {
+    async setRecipePage(event) {
         console.log("Trigger click on recipe card");
+        console.log(event.currentTarget.id)
         for (const id of this.__pages) {
             const div = document.getElementById(`${id}-content`);
             if (id === "recipe") {
                 div.hidden = false;
-                const recipe = this._recipe.addRecipeToPage();
+                await this._recipe.addRecipeToPage(event.currentTarget.id);
                 continue;
             }
             div.hidden = true;
