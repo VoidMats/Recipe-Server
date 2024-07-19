@@ -2,51 +2,9 @@
 
 export class Button {
 
-    constructor(id, type, size) {
+    constructor(id) {
         this._id = id;
-        this._type = type;
-        this._size = size;
         this._button = document.getElementById(id);
-        
-        this._class = "";
-        switch(type.toLowerCase()) {
-            case "success":
-                this._class += " button-success";
-                break;
-            case "error":
-                this._class += " button-error";
-                break;
-            case "warning":
-                this._class += " button-warning";
-                break;
-            case "primary":
-                this._class += " button-primary";
-                break;
-            case "secondary":
-                this._class += " button-secondary";
-                break;
-            case "default":
-            default:
-        }
-
-        switch(size.toLowerCase()) {
-            case "xsmall":
-                this._class += " button-xsmall";
-                break;
-            case "small":
-                this._class += " button-small";
-                break;
-            case "large":
-                this._class += " button-large";
-                break;
-            case "xlarge":
-                this._class += " button-xlarge";
-                break;
-            default:
-        }
-        this._class += " pure-button";
-        this._class = this._class.trim();
-        this._button.setAttribute("class", this._class);
     }
 
     addClickEvent(func) {
@@ -62,18 +20,73 @@ export class Button {
     }
 }
 
-export class ButtonAPI extends Button {
+export class ButtonApi extends Button {
 
-    constructor(id, type, size, api) {
-        super(id, type, size);
-        this._api = api;
+    constructor(client, id, route) {
+        super(id);
+        this._client = client;
+        this._route = route;
+
+        if (!this._id || !this._client) throw new Error("Need both id and client as parameter");
+
+        if (this._route) {
+            super.addClickEvent(async (event) => {
+                event.preventDefault();
+                console.log("Calling server api");
+                
+                const url = this._client._api.createUrl(this._route);
+                const result = await this._client._api.fetch("GET", url);
+                if (!result.success) {
+                    throw new Error(result.message)
+                } 
+            });
+        }
     }
 
-    addClickEvent(url) {
-        super.addClickEvent((event) => {
-            console.log("working");
-            console.log(event);
-            this._api.fetch("GET", url);
+    addClickEvent(method, route, queries, payload) {
+        super.addClickEvent(async (event) => {
+            event.preventDefault();
+            console.log("Calling server api custom event function");
+
+            const url = this._client._api.createUrl(route, queries);
+            const result = await this._client._api.fetch(method, url, payload);
+            console.log(result);
+            if (!result.success) {
+                throw new Error(result.message);
+            }
         });
+    }
+
+    addClickFunction(func) {
+        super.addClickEvent(func);
+    }
+}
+
+export class ButtonApiModal extends ButtonApi {
+    
+    constructor(client, id, route, modal) {
+        super(client, id, route);
+        this._modal = modal;
+
+    }
+
+    addClickEvent(method, route, queries, paylaod) {
+        super.addClickEvent(async (event) => {
+            event.preventDefault();
+            console.log("Calling server api custom event function");
+
+            const url = this._client._api.createUrl(route, queries);
+            const result = await this._client._api.fetch(method, url, payload);
+            console.log(result);
+            if (!result.success) {
+                throw new Error(result.message);
+            } else {
+                const modal = document.getElementById(this._modal);
+            }
+        });
+    }
+
+    addClickFunction(func) {
+        super.addClickEvent(func);
     }
 }

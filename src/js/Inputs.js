@@ -2,15 +2,16 @@
 export class Input {
 
     constructor(id) {
+        this._id = id;
         this._input = document.getElementById(id);
     }
 }
 
 export class InputAPI extends Input { 
 
-    constructor(id, api, route) {
+    constructor(client, id, route) {
         super(id);
-        this._api = api;
+        this._client = client;
         this._route = route;
 
         // GUI
@@ -22,18 +23,16 @@ export class InputAPI extends Input {
             // Send url to backend
             const urlRecipe = document.getElementById("parse-url").value;
             console.log(urlRecipe);
-            const urlServer = `${this._api.backend}/v1/${this._route}`;
+            const urlServer = this._client._api.createUrl(route);
             const payload = {
                 url: urlRecipe
             }
-            const result = await this._api.fetch("POST", urlServer, payload);
+            const result = await this._client._api.fetch("POST", urlServer, payload);
+            console.log(result)
             // Check result and report back to user
             if (result) {
 
             }
         });
-
     }
-
-
 }

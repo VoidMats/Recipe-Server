@@ -79,10 +79,60 @@ const db = fastifyPlugin(
         db.readError = (error) => {
             return error.errorResponse;
         }
+        db.uploadFile = async (id, filename, metadata) => {
+            return new Promise(async (resolve, reject) => {
+                if (!filename) {
+                    return reject(httpError(400, `filename is missing from query`));
+                }
+                // Check for existing file
+                const existingFile = await db
+                    .collection(`${__FILE_BUCKET_NAME}.files`)
+                    .findOne({ "metadata.id": id });
+                if (existingFile) {
+                    return reject(httpError(403, `A file with id ${id} already exists.`));
+                }
+                // Add new file
+                let metadata = { id, created: new Date() };
+                try {
+                    metadata = JSON.parse(metadata ?? "{}");
+                } catch (error) {
+                    return reject(httpError(400, `Invalid metadata: ${error}`));
+                }
+                // Upload file to filebucket
+                const stream = await fileBucket.openUploadStream(filename, { metadata });
+                stream.on("error", async (error) => {
+                    console.error(`GridFS upload stream failed. Calling abort to delete chunks. (reason: ${error})`);
+                    try {
+                        await stream.abort();
+                    } catch (abortError) {
+                        console.error(`Abort failed: ${error}`);
+                    }
+                    return reject(error);
+                });
+                stream.on("finish", async (object) => {
+                    try {
+                        await fastify.mongo.db.collection(`${__FILE_BUCKET_NAME}.files`).updateOne(
+                            { _id: object._id },
+                            {
+                                $set: {
+                                    "metadata.id": id,
+                                },
+                            },
+                        );
+                        resolve({ id });
+                    } catch (error) {
+                        console.error(`Error updating metadata for file ${id}: ${error}`);
+                        console.error(error);
+                        return reject(httpError(500, error));
+                    }
+                });
+                request.body.pipe(stream);
+            });
+        }
 
         fastify.addHook("onClose", () => {
-            console.log("==> Closing database")
-            client.close()
+            console.log("==> Closing database");
+            client.close();
         });
 
         fastify.decorate("mongo", { db, client, fileBucket });
@@ -91,6 +141,8 @@ const db = fastifyPlugin(
         name: "mongo"
     }
 )
+
+
 
 export {
     __FILE_BUCKET_NAME,

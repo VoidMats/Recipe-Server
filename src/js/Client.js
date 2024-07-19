@@ -1,6 +1,6 @@
 
 import { API } from "./API";
-import { ButtonAPI } from "./Buttons";
+import { ButtonApi, ButtonApiModal } from "./Buttons";
 import { InputAPI } from "./Inputs";
 import { LinkPage } from './Links';
 import { GridSearch } from "./Grid";
@@ -21,11 +21,28 @@ class Client {
         this._lindDelete = new LinkPage(this, "link-delete", "delete-content");
         this._switchDarkMode = new SwitchDarkMode("dark-mode-switch", "html-main");
         // Buttons
-        this._btnTest = new ButtonAPI("testButton", "primary", "xlarge", this._api);
+        //this._btnTest = new ButtonAPI("testButton", "primary", "xlarge", this._api);
         // Search page
         this._search = new GridSearch(this, "search-grid", "search-input");  
         // Parse page
-        this._parse = new InputAPI("parse-button", this._api, "parse"); // TODO this has to be better
+        this._parse = new ButtonApiModal(this, "parse-button", undefined, "parse-modal");
+        this._parse.addClickFunction(async (event) => {
+            event.preventDefault();
+            
+            // Send url to backend
+            const urlRecipe = document.getElementById("parse-url").value;
+            console.log(urlRecipe);
+            const urlServer = this._client._api.createUrl(route);
+            const payload = {
+                url: urlRecipe
+            }
+            const result = await this._client._api.fetch("POST", urlServer, payload);
+            console.log(result)
+            // Check result and report back to user
+            if (result) {
+
+            }
+        }) 
         // Recipe page
         this._recipe = new Recipe(this, "recipe-content");
 
