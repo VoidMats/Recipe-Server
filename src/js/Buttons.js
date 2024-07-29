@@ -87,6 +87,6 @@ export class ButtonApiModal extends ButtonApi {
     }
 
     addClickFunction(func) {
-        super.addClickEvent(func);
+        super.addClickFunction(func);
     }
 }

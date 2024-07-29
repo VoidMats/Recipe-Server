@@ -32,12 +32,12 @@ class Client {
             // Send url to backend
             const urlRecipe = document.getElementById("parse-url").value;
             console.log(urlRecipe);
-            const urlServer = this._client._api.createUrl(route);
+            const urlServer = this._api.createUrl("/parse");
             const payload = {
                 url: urlRecipe
             }
-            const result = await this._client._api.fetch("POST", urlServer, payload);
-            console.log(result)
+            const result = await this._api.fetch("POST", urlServer, payload);
+            console.log(result);
             // Check result and report back to user
             if (result) {
 
@@ -49,7 +49,6 @@ class Client {
     }
 
     init() {
-        this._btnTest.addClickEvent();
         this.__pages.forEach((id) => {
             if (id === "home") return true;
             const div = document.getElementById(`${id}-content`);

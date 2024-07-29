@@ -60,8 +60,8 @@ const db = fastifyPlugin(
             try {
                 await db.command({ collMod: name, validator: { $jsonSchema: schema }});
             } catch(error) {
-                // 26 === "ns not found" - collection doesn't exist
-                if (error instanceof MongoError && error.code === 26) {
+                // Collection doesn't exist
+                if (error instanceof MongoError && error.codeName === "NamespaceNotFound") {
                     console.log(`  - Collection '${name}' does not exist and will be created`)
                     await db.createCollection(name, {
                         validator: { $jsonSchema: schema },
@@ -77,8 +77,17 @@ const db = fastifyPlugin(
 
         console.log("  - Add methods to db");
         db.readError = (error) => {
+            if (error.code === 121) {
+                console.error(error.errInfo.details);
+                console.error(error.errInfo.details.schemaRulesNotSatisfied.toString())
+                console.error(JSON.stringify(error.errorResponse.errInfo));
+                // TODO create a proper error message which is human readable
+                //return `Validation error: ${error.errorResponse}`;
+                return error.errorResponse;
+            }
             return error.errorResponse;
-        }
+        };
+
         db.uploadFile = async (id, filename, metadata) => {
             return new Promise(async (resolve, reject) => {
                 if (!filename) {
@@ -128,7 +137,7 @@ const db = fastifyPlugin(
                 });
                 request.body.pipe(stream);
             });
-        }
+        };
 
         fastify.addHook("onClose", () => {
             console.log("==> Closing database");

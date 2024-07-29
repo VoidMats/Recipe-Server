@@ -32,6 +32,14 @@ export class API {
         return url;
     }
 
+    /**
+     * 
+     * @param { String } method 
+     * @param { String | URL } url 
+     * @param { Object } payload 
+     * @param { Object } signal 
+     * @returns 
+     */
     async fetch(method, url, payload, signal) {
         const headers = {};
         const options = {};
@@ -71,7 +79,8 @@ export class API {
     async _checkStatus(response) {
         if (response.ok) {
             const type = (response.headers) ? response.headers.get("Content-Type") : undefined;
-            switch (type) {
+            console.log(type);
+            switch (type?.toLowerCase()) {
                 case "application/json; charset=utf-8":
                 case "application/json":
                     return response.json();

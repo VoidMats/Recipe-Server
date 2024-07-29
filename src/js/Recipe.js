@@ -23,19 +23,26 @@ export class Recipe {
             </div>
             <div class="grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;">
                 <div>
-                <h5 style="padding-top: 20px;">Ingredients</h4>
-                <ul>
-                    <li>First ingredient</li>
-                    <li>Second ingredient</li>
-                </ul>
+                    <h5 style="padding-top: 20px;">Ingredients</h4>
+                    <ul>
+                        <li>First ingredient</li>
+                        <li>Second ingredient</li>
+                    </ul>
                 </div>
                 <div>
-                <h5 style="padding-top: 20px;">Instruction</h4>
-                <ol>
-                    <li>First instruction</li>
-                    <li>Second instruction</li>
-                    <li>Third instruction</li>
-                </ol>
+                    <h5 style="padding-top: 20px;">Instruction</h5>
+                    <p>Name instruction</p>
+                    <ol>
+                        <li>First instruction</li>
+                        <li>Second instruction</li>
+                        <li>Third instruction</li>
+                    </ol>
+                    <p>Name instruction</p>
+                    <ol>
+                        <li>First instruction</li>
+                        <li>Second instruction</li>
+                        <li>Third instruction</li>
+                    </ol>
                 </div>
             </div>
         </div>
@@ -133,19 +140,21 @@ export class Recipe {
             insH5.textContent = 'Instruction';
             insDiv.appendChild(insH5);
 
-            for (const instruction of recipe.instructions) {
-                const insHeader = document.createElement("p");
-                insHeader.textContent = instruction.name;
-                insDiv.appendChild(insHeader);
-
-                const insList = document.createElement('ol');
-                for (const item of instruction.step) {
-                    const li = document.createElement('li');
-                    li.textContent = item;
-                    li.style.fontFamily = 'inherit';
-                    insList.appendChild(li);
+            if (Array.isArray(recipe.instructions)) {
+                for (const instruction of recipe.instructions) {
+                    const insHeader = document.createElement("p");
+                    insHeader.textContent = instruction.name;
+                    insDiv.appendChild(insHeader);
+    
+                    const insList = document.createElement('ol');
+                    for (const item of instruction.steps) {
+                        const li = document.createElement('li');
+                        li.textContent = item;
+                        li.style.fontFamily = 'inherit';
+                        insList.appendChild(li);
+                    }
+                    insDiv.appendChild(insList);
                 }
-                insDiv.appendChild(insList);
             }
 
             grid3.appendChild(ingDiv);

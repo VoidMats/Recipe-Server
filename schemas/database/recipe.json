@@ -57,6 +57,7 @@
                                     "type": "string",
                                     "description": "Unit of the ingredient's value",
                                     "enum": [
+                                        "",
                                         "st",
                                         "pcs",
                                         "g",
@@ -66,13 +67,14 @@
                                         "liter",
                                         "dl",
                                         "ml",
-                                        "",
                                         "cups",
                                         "tsk",
                                         "msk",
                                         "packet",
                                         "knippa",
                                         "knippa(or)",
+                                        "klyfta",
+                                        "klyfta(or)",
                                         "nypa",
                                         "nypa(or)"
                                     ]
@@ -97,7 +99,7 @@
                         "type": "string",
                         "description": "Name of this instruction"
                     },
-                    "step": {
+                    "steps": {
                         "type": "array",
                         "items": {
                             "type": "string",
