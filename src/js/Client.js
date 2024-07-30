@@ -30,17 +30,19 @@ class Client {
             event.preventDefault();
             
             // Send url to backend
-            const urlRecipe = document.getElementById("parse-url").value;
-            console.log(urlRecipe);
+            const elementUrl = document.getElementById("parse-url")
+            const urlRecipe = elementUrl.value;
             const urlServer = this._api.createUrl("/parse");
             const payload = {
                 url: urlRecipe
             }
             const result = await this._api.fetch("POST", urlServer, payload);
-            console.log(result);
+            
             // Check result and report back to user
-            if (result) {
-
+            if (result && result._id) {
+                elementUrl.textContent = "";
+                this._recipe.addRecipeToPage(result._id);
+                this.setPage("recipe");
             }
         }) 
         // Recipe page
@@ -49,11 +51,18 @@ class Client {
     }
 
     init() {
-        this.__pages.forEach((id) => {
-            if (id === "home") return true;
+        this.setPage("home");    
+    }
+
+    setPage(page) {
+        for (const id of this.__pages) {
             const div = document.getElementById(`${id}-content`);
+            if (id === page) {
+                div.hidden = false;
+                continue;
+            }
             div.hidden = true;
-        });
+        }
     }
 
 }

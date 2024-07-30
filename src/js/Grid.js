@@ -42,7 +42,7 @@ export class GridSearch extends Grid {
                 // Create body
                 const body = document.createElement("img");
                 body.src = this._client._api.createUrl("/public/test.png"); // Assuming recipe.image contains the URL of the image
-                body.alt = "test-image";                            // recipe.title
+                body.alt = "test-image";                                    // recipe.title
                 card.appendChild(body);
 
                 // Create footer

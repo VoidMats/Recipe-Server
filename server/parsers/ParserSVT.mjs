@@ -40,6 +40,7 @@ export default class ParserSVT extends Parser {
             recipe["components"] = [];                      
             const listNames = this._doc.body.querySelectorAll('h3[class*="Recipe_svtmat_recipe__ingredientsSubHeader"]');
             const listIngredients = this._doc.body.querySelector('div[class*="Recipe_svtmat_recipe__ingredientsListContainer"]');
+            // Remove the first div, because it only contains, servings
             const childNodes = listIngredients.children;
             if (childNodes.length > 0 && childNodes[0].tagName === "DIV") {
                 listIngredients.removeChild(childNodes[0]);
@@ -52,7 +53,6 @@ export default class ParserSVT extends Parser {
                     ingredients: [] 
                 };
                 const ul = listIngredients.children[0].children[0];
-                //console.log(ul.innerHTML);
                 for (const li of ul.childNodes) {
                     const portion = {};
                     const size_unit = li.querySelector('span');
@@ -72,12 +72,36 @@ export default class ParserSVT extends Parser {
                 }
                 recipe.components.push(obj);
             } else {
+                for (const element of listIngredients.children) {
+                    if (element.tagName === "H3") {
+
+                    }
+                    if (element.tagName === "UL") {
+                        for (const li of ul.childNodes) {
+                            const portion = {};
+                            const size_unit = li.querySelector('span');
+                            if (size_unit) {
+                                const size = size_unit.firstChild?.nodeValue;
+                                portion["size"] = (size) ? size : "";
+                                let unit;
+                                if (size_unit.length === 2) {
+                                    unit = size_unit.lastChild?.nodeValue;
+                                }
+                                portion["unit"] = (unit) ? unit : "";
+                            }
+                            const ingredient = li.lastChild.textContent;
+                            if (size_unit && ingredient) portion["ingredient"] = ingredient;
+                            obj.ingredients.push(portion);
+                        }
+                    }
+                }
+                /*
                 for (let i=0; i<listNames.length; i++) {
                     const obj = { ingredients: [] };
                     const name = listNames[i].textContent;
                     if (name) obj["name"] = name;
                     const ul = listIngredients.children[i].children[1];
-                    for (const li of ul.childNodes) {
+                    for (const li of ul?.childNodes) {
                         const portion = {};
                         const size_unit = li.querySelector('span');
                         if (size_unit) {
@@ -92,6 +116,7 @@ export default class ParserSVT extends Parser {
                     }
                     recipe.components.push(obj);
                 };
+                */
             }
 
             // Instructions
@@ -99,8 +124,6 @@ export default class ParserSVT extends Parser {
             const listInstructions = this._doc.body.querySelector('div.Recipe_svtmat_recipe__instructionsContainer__oohtS');
             let idx = 0;
             for (const child of listInstructions.childNodes) {
-                console.log(`Node type: ${child.nodeType}, Node name: ${child.nodeName}`);
-                console.log(child.textContent);
                 if (child.nodeName === "H4") {
                     recipe.instructions[idx].name = child.textContent;
                 }
