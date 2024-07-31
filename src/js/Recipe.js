@@ -59,7 +59,6 @@ export class Recipe {
         const url = this._client._api.createUrl(`/recipe/${recipeId}`);
         const response = await this._client._api.fetch("GET", url);
         if (response.success) {
-            console.log(response.result);
             const recipe = response.result;
 
             // Get container element
@@ -68,7 +67,7 @@ export class Recipe {
 
             const header = document.createElement('h2');
             header.className = 'content-subhead';
-            header.textContent = 'Recipe';
+            header.textContent = recipe.title;
 
             const grid1 = document.createElement('div');
             grid1.className = 'grid';

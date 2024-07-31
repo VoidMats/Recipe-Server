@@ -31,22 +31,24 @@ export class GridSearch extends Grid {
             answer?.result.forEach((recipe) => {
                 const card = document.createElement("article");
                 card.id = recipe._id;
-                //card.setAttribute("data-theme","light");
-                //card.setAttribute("class", "article-card")
                 
                 // Create header
-                const header = document.createElement("header");
+                const header = document.createElement("div");
+                header.setAttribute("class", "article-header");
                 header.textContent = recipe.title;
                 card.appendChild(header);
 
-                // Create body
+                // Create body 
+                // TODO Get image from database
                 const body = document.createElement("img");
-                body.src = this._client._api.createUrl("/public/test.png"); // Assuming recipe.image contains the URL of the image
-                body.alt = "test-image";                                    // recipe.title
+                body.setAttribute("class", "article-img");
+                body.src = this._client._api.createUrl("/public/test.png");
+                body.alt = "test-image";                                  
                 card.appendChild(body);
 
                 // Create footer
-                const footer = document.createElement("footer");
+                const footer = document.createElement("div");
+                footer.setAttribute("class", "article-footer");
                 footer.textContent = `Servings: ${recipe.servings}, ${recipe.time}`;
                 card.appendChild(footer);
 

@@ -99,28 +99,6 @@ export default class ParserSVT extends Parser {
                     }
                     recipe.components.push(subComponent);
                 }
-                /*
-                for (let i=0; i<listNames.length; i++) {
-                    const obj = { ingredients: [] };
-                    const name = listNames[i].textContent;
-                    if (name) obj["name"] = name;
-                    const ul = listIngredients.children[i].children[1];
-                    for (const li of ul?.childNodes) {
-                        const portion = {};
-                        const size_unit = li.querySelector('span');
-                        if (size_unit) {
-                            let size = size_unit.firstChild?.nodeValue;
-                            portion["size"] = (size) ? size : "";
-                            const unit = size_unit.lastChild?.nodeValue;
-                            portion["unit"] = (unit) ? unit : "";
-                        }
-                        const ingredient = li.lastChild.textContent;
-                        if (size_unit && ingredient) portion["ingredient"] = ingredient;
-                        obj.ingredients.push(portion);
-                    }
-                    recipe.components.push(obj);
-                };
-                */
             }
 
             // Instructions

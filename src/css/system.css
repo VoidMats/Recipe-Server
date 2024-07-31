@@ -1,3 +1,14 @@
+:root {
+    --pico-card-section-background-color: #dcc0d5;
+    --pico-card-border-radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --pico-card-section-background-color: #444444;
+        --pico-card-border-radius: 10px;
+    }
+}
 
 header {
     background-color: var(--pico-background-color);
@@ -6,12 +17,51 @@ header {
     top: 0;
 }
 
-.article-card {
+article {
     background-color: var(--pico-card-background-color);
-    border: 5px solid var(--pico-primary); /*(--pico-card-border-color);*/
-    border-radius: 20px;
     box-shadow: var(--pico-card-box-shadow);
-    padding: 20px;
-    margin: 10px;
+    padding: 0px;
+    margin: 0px;
 }
+
+article .article-header {
+    background-color: var(--pico-card-background-color) !important;
+    box-shadow: var(--pico-card-box-shadow);
+    border-top-left-radius: var(--pico-card-border-radius);
+    border-top-right-radius: var(--pico-card-border-radius);
+    padding: 10px;
+    margin: 0px;
+}
+
+article .article-img {
+    background-color: var(--pico-card-background-color);
+    margin: 0px;
+    padding: 0px;
+}
+
+article .article-footer {
+    background-color: var(--pico-card-background-color) !important;
+    box-shadow: var(--pico-card-box-shadow);
+    border-bottom-left-radius: var(--pico-card-border-radius);
+    border-bottom-right-radius: var(--pico-card-border-radius);
+    font-size: smaller; 
+    text-align: left;
+    padding: 10px;
+    margin: 0px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    height: auto; 
+    max-height: none;
+    overflow: visible;
+    padding: 1rem;
+}
+
+
+
+
+
 
