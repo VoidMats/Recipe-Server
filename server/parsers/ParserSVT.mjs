@@ -48,7 +48,7 @@ export default class ParserSVT extends Parser {
             // If there is no sub-headers in components
             // TODO this could be done better
             if (listNames.length === 0) {
-                const obj = { 
+                const subComponent = { 
                     name: recipe.title,
                     ingredients: [] 
                 };
@@ -68,32 +68,36 @@ export default class ParserSVT extends Parser {
                     //const ingredient = li.querySelector('div[class*="Recipe_svtmat_recipe__ingredientsItemCell"]');
                     const ingredient = li.lastChild.textContent;
                     if (size_unit && ingredient) portion["ingredient"] = ingredient;
-                    obj.ingredients.push(portion);
+                    subComponent.ingredients.push(portion);
                 }
-                recipe.components.push(obj);
+                recipe.components.push(subComponent);
             } else {
                 for (const element of listIngredients.children) {
-                    if (element.tagName === "H3") {
-
-                    }
-                    if (element.tagName === "UL") {
-                        for (const li of ul.childNodes) {
-                            const portion = {};
-                            const size_unit = li.querySelector('span');
-                            if (size_unit) {
-                                const size = size_unit.firstChild?.nodeValue;
-                                portion["size"] = (size) ? size : "";
-                                let unit;
-                                if (size_unit.length === 2) {
-                                    unit = size_unit.lastChild?.nodeValue;
+                    const subComponent = { name : undefined, ingredients: [] };
+                    for (const child of element.children) {
+                        if (child.tagName === "H3") {
+                            subComponent["name"] = child.textContent;
+                        }
+                        if (child.tagName === "UL") {
+                            for (const li of child.children) {
+                                const portion = {};
+                                const size_unit = li.querySelector('span');
+                                if (size_unit) {
+                                    const size = size_unit.firstChild?.nodeValue;
+                                    portion["size"] = (size) ? size : "";
+                                    let unit;
+                                    if (size_unit.length === 2) {
+                                        unit = size_unit.lastChild?.nodeValue;
+                                    }
+                                    portion["unit"] = (unit) ? unit : "";
                                 }
-                                portion["unit"] = (unit) ? unit : "";
+                                const ingredient = li.lastChild.textContent;
+                                if (size_unit && ingredient) portion["ingredient"] = ingredient;
+                                subComponent["ingredients"].push(portion);
                             }
-                            const ingredient = li.lastChild.textContent;
-                            if (size_unit && ingredient) portion["ingredient"] = ingredient;
-                            obj.ingredients.push(portion);
                         }
                     }
+                    recipe.components.push(subComponent);
                 }
                 /*
                 for (let i=0; i<listNames.length; i++) {
