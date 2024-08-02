@@ -50,6 +50,22 @@ article .article-footer {
     margin: 0px;
 }
 
+article .article-footer-icon {
+    height: 1em;
+    margin-right: 5px;
+}
+
+.recipe-info {
+    font-size: medium;
+    text-align: left;
+    padding: 10px;
+}
+
+.recipe-info-icon {
+    height: 1em;
+    margin-right: 5px;
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

@@ -69,11 +69,22 @@ export class Recipe {
             header.className = 'content-subhead';
             header.textContent = recipe.title;
 
+            const info = document.createElement("div");
+            info.setAttribute("class", "recipe-info");
+            // Create image element for the icon
+            const icon = document.createElement("img");
+            icon.src = this._client._api.createUrl("/public/cutlery.png");
+            icon.alt, "Cutlery";
+            icon.setAttribute("class", "recipe-info-icon");
+            // Append the icon and text to the info bar
+            info.appendChild(icon);
+            info.appendChild(document.createTextNode(`${recipe.servings}, Time: ${recipe.time}`));
+
             const grid1 = document.createElement('div');
             grid1.className = 'grid';
             grid1.style.display = 'grid';
             grid1.style.gridTemplateColumns = 'repeat(4, 1fr)';
-            grid1.style.gap = '1rem';
+            grid1.style.gap = '0.5rem';
 
             const inputs = [recipe.title, recipe.time, recipe.servings, recipe.keywords];
             inputs.forEach((context) => {
@@ -161,6 +172,7 @@ export class Recipe {
 
             // Append all elements
             root.appendChild(header);
+            root.appendChild(info);
             root.appendChild(grid1);
             root.appendChild(grid2);
             root.appendChild(grid3);

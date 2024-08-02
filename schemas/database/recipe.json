@@ -41,7 +41,7 @@
                 "type": "object",
                 "properties": {
                     "name": {
-                        "type": "string",
+                        "type": ["string", "null"],
                         "description": "Name of the sub-meal of the recipe"
                     },
                     "ingredients": {
@@ -96,7 +96,7 @@
                 "type": "object",
                 "properties": {
                     "name": {
-                        "type": "string",
+                        "type": ["string", "null"],
                         "description": "Name of this instruction"
                     },
                     "steps": {

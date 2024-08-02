@@ -51,11 +51,10 @@ class Client {
         // My stuff 
         const rootStyles = getComputedStyle(document.documentElement);
         const picoCardBackgroundColor = rootStyles.getPropertyValue('--pico-card-border-color').trim();
-        console.log(picoCardBackgroundColor);
-
+        
         // Lighten the color by 20%
         const lighterColor = this.createLighterColor(picoCardBackgroundColor, 20);
-        console.log(lighterColor);
+        
 
     }
 

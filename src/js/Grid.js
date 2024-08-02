@@ -42,14 +42,21 @@ export class GridSearch extends Grid {
                 // TODO Get image from database
                 const body = document.createElement("img");
                 body.setAttribute("class", "article-img");
-                body.src = this._client._api.createUrl("/public/test.png");
+                body.src = this._client._api.createUrl("/public/missing.png");
                 body.alt = "test-image";                                  
                 card.appendChild(body);
 
                 // Create footer
                 const footer = document.createElement("div");
                 footer.setAttribute("class", "article-footer");
-                footer.textContent = `Servings: ${recipe.servings}, ${recipe.time}`;
+                // Create image element for the icon
+                const icon = document.createElement("img");
+                icon.src = this._client._api.createUrl("/public/cutlery.png");
+                icon.alt, "Cutlery";
+                icon.setAttribute("class", "article-footer-icon");
+                // Append the icon and text to the footer
+                footer.appendChild(icon);
+                footer.appendChild(document.createTextNode(`${recipe.servings}, ${recipe.time}`));
                 card.appendChild(footer);
 
                 // Create eventlistener
