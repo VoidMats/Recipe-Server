@@ -128,13 +128,16 @@ export default async (fastify) => {
         const document = request.body;
         document._id = _validateObjectId(document._id);
         try {
-            const dbAnswer = await fastify.mongo.db.collection("recipe").insertOne(document);
-            return _createAnswer(true, dbAnswer);
+            const result = await fastify.mongo.db.collection("recipe").insertOne(document);
+            return _createAnswer(true, result);
         } catch(error) {
             return createHttpError(500, error);
         }
     });
 
+    /**
+     * @returns { }
+     */
     fastify.get("/recipe/:id", async (request) => {
         const id = _validateObjectId(request.params.id);
         const recipe = await fastify.mongo.db.collection("recipe").findOne({ _id: id });
@@ -145,10 +148,29 @@ export default async (fastify) => {
         return _createAnswer(true, recipe);
     });
 
-
+    /**
+     * Route to search for recipes. 
+     * @param { Object } query - request.query
+     * @param { String } query.text - Search text in title
+     * @param { Array } query.ingredients - Array of ingredients that the recipe need to have
+     * @returns { Array } Returns an array with recipes from the search critera 
+     */
     fastify.get("/recipe/search", async (request) => {
-        const { text } = request.query;
+        const { text, ingredients } = request.query;
+        console.log(ingredients)
+
         const query = { title: { "$regex": `${text}`, "$options": "i" } };
+    
+        if (ingredients) {
+            const array = ingredients.split(',');
+            if (array.length > 0) {
+                query["components.ingredients"] = {
+                    "$all": array.map(ingredient => ({
+                        "$elemMatch": { ingredient: { "$regex": ingredient, "$options": "i" } }
+                    }))
+                };
+            }
+        }
 
         try {
             const recipes = await fastify.mongo.db.collection("recipe").find(query).toArray();

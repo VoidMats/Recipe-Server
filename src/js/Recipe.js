@@ -72,13 +72,19 @@ export class Recipe {
             const info = document.createElement("div");
             info.setAttribute("class", "recipe-info");
             // Create image element for the icon
-            const icon = document.createElement("img");
-            icon.src = this._client._api.createUrl("/public/cutlery.png");
-            icon.alt, "Cutlery";
-            icon.setAttribute("class", "recipe-info-icon");
+            const iconServing = document.createElement("img");
+            iconServing.src = this._client._api.createUrl("/public/cutlery.png");
+            iconServing.alt, "Servings";
+            iconServing.setAttribute("class", "recipe-info-icon");
+            const iconTime = document.createElement("img");
+            iconTime.src = this._client._api.createUrl("/public/clock.png");
+            iconTime.alt = "Time";
+            iconTime.setAttribute("class", "recipe-info-icon");
             // Append the icon and text to the info bar
-            info.appendChild(icon);
-            info.appendChild(document.createTextNode(`${recipe.servings}, Time: ${recipe.time}`));
+            info.appendChild(iconServing);
+            info.appendChild(document.createTextNode(` ${recipe.servings}   `));
+            info.appendChild(iconTime);
+            info.appendChild(document.createTextNode(` ${recipe.time} `));
 
             const grid1 = document.createElement('div');
             grid1.className = 'grid';

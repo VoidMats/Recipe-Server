@@ -1,9 +1,11 @@
 
+import getUserLocale from 'get-user-locale';
+
 import { API } from "./API";
 import { ButtonApi, ButtonApiModal } from "./Buttons";
 import { InputAPI } from "./Inputs";
 import { LinkPage } from './Links';
-import { GridSearch } from "./Grid";
+import { GridSearch, GridSearchTags } from "./Grid";
 import { Recipe } from "./Recipe";
 import { SwitchDarkMode } from "./Switch";
 
@@ -12,6 +14,7 @@ class Client {
     constructor() {
         this.__pages = ["home", "search", "parse", "add", "delete", "recipe"];
         this._api = new API("none");
+        this._language = getUserLocale();
 
         // Navbar
         this._linkHome = new LinkPage(this, "link-home", "home-content");
@@ -23,7 +26,8 @@ class Client {
         // Buttons
         //this._btnTest = new ButtonAPI("testButton", "primary", "xlarge", this._api);
         // Search page
-        this._search = new GridSearch(this, "search-grid", "search-input");  
+        this._searchTags = new GridSearchTags(this, "search-grid-tag");
+        this._search = new GridSearch(this, "search-grid", "search-input");
         // Parse page
         this._parse = new ButtonApiModal(this, "parse-button", undefined, "parse-modal");
         this._parse.addClickFunction(async (event) => {

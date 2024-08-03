@@ -8,18 +8,56 @@ export class Grid {
     }
 }
 
+export class GridSearchTags extends Grid {
+
+    constructor(client, idGrid) {
+        super(idGrid);
+        this._client = client;
+
+        this.__LIST_MEAL = [
+            "Meat", "Fish", "Pasta", "Sausage", "Vegetarian", "Pork", "Beans",
+            "Sallad", "Bread"
+        ]
+
+        // Create buttons
+        this.__LIST_MEAL.forEach(meal => {
+            const btn = document.createElement("button");
+            btn.setAttribute("class", "outline button-search-tag");
+            btn.textContent = meal;
+            btn.addEventListener("click", (event) => {
+                event.preventDefault();
+                btn.classList.toggle('active');
+                console.log("trigger")
+            });
+            this._grid.appendChild(btn);
+        })
+    }
+}
+
 export class GridSearch extends Grid {
 
-    constructor(client, idGrid, idSearch) {
+    /**
+     * 
+     * @param {*} client 
+     * @param {*} idGrid 
+     * @param {*} idSearch 
+     */
+    constructor(client, idGrid, idSearch, idButton) {
         super(idGrid);
         this._client = client;
         this._idSearch = idSearch;
+        this._idButton = idButton;
         this._search = document.getElementById(idSearch);
+        this._button = document.getElementById(idButton);
 
-        // Add listener
         this._search.addEventListener("keyup", async (event) => {
-            const search = event.target.value;
-            const url = this._client._api.createUrl("/recipe/search", { text: search });
+            const tags = document.querySelectorAll('.button-search-tag.active');
+            const ingredients = Array.from(tags).map((tag) => {
+                return tag.textContent.toLowerCase();
+            });
+            
+            const text = event.target.value;
+            const url = this._client._api.createUrl("/recipe/search", { text, ingredients });
             const answer = await this._client._api.fetch("GET", url);
 
             // Remove event listener and any card
@@ -68,8 +106,6 @@ export class GridSearch extends Grid {
     }
 
     async setRecipePage(event) {
-        console.log("Trigger click on recipe card");
-        console.log(event.currentTarget.id)
         for (const id of this.__pages) {
             const div = document.getElementById(`${id}-content`);
             if (id === "recipe") {

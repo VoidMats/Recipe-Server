@@ -58,7 +58,7 @@ article .article-footer-icon {
 .recipe-info {
     font-size: medium;
     text-align: left;
-    padding: 10px;
+    padding: 10px, 20px;
 }
 
 .recipe-info-icon {
@@ -75,6 +75,31 @@ article .article-footer-icon {
     overflow: visible;
     padding: 1rem;
 }
+
+.grid-search-tag {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.5rem;
+    height: auto; 
+    max-height: none;
+    overflow: visible;
+    padding: 0.5em;
+}
+
+/** Buttons **/
+
+.button-search-tag {
+    padding: 10px 10px;
+    margin: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button-search-tag.active {
+    background-color: var(--pico-primary-hover-background);
+    color: var(--pico-primary-inverse);
+}
+
 
 
 

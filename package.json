@@ -19,6 +19,7 @@
     "env-schema": "^5.2.1",
     "fastify": "^4.27.0",
     "fastify-graceful-shutdown": "^3.5.3",
+    "get-user-locale": "^2.3.2",
     "http-errors": "^2.0.0",
     "jsdom": "^24.1.0",
     "mongodb": "^6.6.2",
