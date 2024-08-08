@@ -47,6 +47,63 @@ export class LinkPage extends Link {
     }
 }
 
+export class LinkMenu extends Link {
+
+    constructor(id, ) {
+        super(id);
+        this._link.classList.add("dropdown");
+
+        const a = document.createElement("a");
+        a.classList.add("dropdown-toggle");
+        a.href = "#";
+        // TODO WIP
+    }
+}
+
+export class LinkMenuIcon extends Link {
+
+    constructor(id) {
+        super(id);
+        this._link.classList.add("dropdown");
+
+        /*
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle">Languages <i class="fas fa-angle-down"></i></a>
+            <ul class="dropdown-menu">
+                <li><a href="#"><i class="fab fa-html5"></i> HTML</a></li>
+                <li><a href="#"><i class="fab fa-css3-alt"></i> CSS</a></li>
+                <li><a href="#"><i class="fab fa-js"></i> JavaScript</a></li>
+                <li><a href="#"><i class="fab fa-python"></i> Python</a></li>
+            </ul>
+        </li>
+        */
+
+        // GUI
+        const a = document.createElement("a");
+        a.classList.add("dropdown-toggle");
+        a.href = "#";
+
+        const ul = document.createElement("ul");
+        ul.classList.add("dropdown-menu");
+
+        let text = this._id.split('-')[1];
+        text = text[0].toUpperCase() + text.slice(1);
+        a.appendChild(document.createTextNode(text));
+    }
+
+    init() {
+        var dropdowns = document.querySelectorAll('.dropdown-toggle');
+    
+        dropdowns.forEach(function (dropdown) {
+            dropdown.addEventListener('click', function (event) {
+                event.preventDefault();
+                var dropdownMenu = this.nextElementSibling;
+                dropdownMenu.classList.toggle('show');
+            });
+        });
+    }
+}
+
 export class LinkRecipe extends Link {
 
     constructor(id) {

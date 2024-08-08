@@ -6,8 +6,8 @@ import { ButtonApi, ButtonApiModal } from "./Buttons";
 import { InputAPI } from "./Inputs";
 import { LinkPage } from './Links';
 import { GridSearch, GridSearchTags } from "./Grid";
-import { Recipe } from "./Recipe";
 import { SwitchDarkMode } from "./Switch";
+import { Recipe } from "./Recipe";
 
 class Client {
 
@@ -15,6 +15,7 @@ class Client {
         this.__pages = ["home", "search", "parse", "add", "delete", "recipe"];
         this._api = new API("none");
         this._language = getUserLocale();
+        console.log(this._language);
 
         // Navbar
         this._linkHome = new LinkPage(this, "link-home", "home-content");
@@ -23,6 +24,7 @@ class Client {
         this._linkAdd = new LinkPage(this, "link-add", "add-content");
         this._lindDelete = new LinkPage(this, "link-delete", "delete-content");
         this._switchDarkMode = new SwitchDarkMode("dark-mode-switch", "html-main");
+        
         // Buttons
         //this._btnTest = new ButtonAPI("testButton", "primary", "xlarge", this._api);
         // Search page

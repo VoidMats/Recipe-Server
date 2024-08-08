@@ -27,7 +27,7 @@ export class GridSearchTags extends Grid {
             btn.addEventListener("click", (event) => {
                 event.preventDefault();
                 btn.classList.toggle('active');
-                console.log("trigger")
+                console.log("trigger");
             });
             this._grid.appendChild(btn);
         })

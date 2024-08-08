@@ -1,5 +1,11 @@
 {
-    "home": {
-        ""
+    "chicken": {
+        "sv-SE": "kyckling"
+    },
+    "pasta": {
+        "sv-SE": "pasta"
+    },
+    "sausage": {
+        "sv-SE": "korv"
     }
 }

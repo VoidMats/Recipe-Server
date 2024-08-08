@@ -10,6 +10,11 @@ export default function readEnvironment(path = ".env") {
                 default: 7090,
                 description: "Port number on the server"
             },
+            SERVER_LANGUAGES: {
+                type: "string",
+                default: "en-US, sv-SE",
+                description: "Which languages are the server supporting"
+            },
             PRINT_ROUTES: {
                 type: "boolean",
                 default: false,
