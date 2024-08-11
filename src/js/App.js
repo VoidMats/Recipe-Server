@@ -2,10 +2,10 @@
 
 import { Client } from "./Client";
 
-let client;
 try {
-    client = new Client();
+    const client = new Client();
     client.init();
+    window.client = client;
 } catch(e) {
     console.log(e);
     throw e;

@@ -6,6 +6,8 @@ export class Grid {
         this._idGrid = idGrid;
         this._grid = document.getElementById(idGrid);
     }
+
+    
 }
 
 export class GridSearchTags extends Grid {
@@ -14,23 +16,31 @@ export class GridSearchTags extends Grid {
         super(idGrid);
         this._client = client;
 
-        this.__LIST_MEAL = [
-            "Meat", "Fish", "Pasta", "Sausage", "Vegetarian", "Pork", "Beans",
-            "Sallad", "Bread"
-        ]
-
         // Create buttons
-        this.__LIST_MEAL.forEach(meal => {
+        Object.keys(this._client._tableLanguages.meal)
+        .forEach(ingredient => {
             const btn = document.createElement("button");
             btn.setAttribute("class", "outline button-search-tag");
-            btn.textContent = meal;
+            const text = this._client.getWord(ingredient, "meal", true);
+            btn.setAttribute("word", ingredient);
+            btn.textContent = text;
             btn.addEventListener("click", (event) => {
                 event.preventDefault();
                 btn.classList.toggle('active');
-                console.log("trigger");
             });
             this._grid.appendChild(btn);
         })
+    }
+
+    setLanguage() {
+        console.log("trigger setLanguage in GridSearchTags")
+        const buttons = this._grid.querySelectorAll('.button-search-tag');
+        for (const button of buttons) {
+            const word = button.getAttribute("word");
+            const text = this._client.getWord(word, "meal", true);
+            console.log(text);
+            button.textContent = text;
+        }
     }
 }
 
@@ -38,9 +48,9 @@ export class GridSearch extends Grid {
 
     /**
      * 
-     * @param {*} client 
-     * @param {*} idGrid 
-     * @param {*} idSearch 
+     * @param { Object } client 
+     * @param { String } idGrid 
+     * @param { String } idSearch 
      */
     constructor(client, idGrid, idSearch, idButton) {
         super(idGrid);

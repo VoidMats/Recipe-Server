@@ -1,4 +1,5 @@
 
+
 import getUserLocale from 'get-user-locale';
 
 import { API } from "./API";
@@ -15,53 +16,51 @@ class Client {
         this.__pages = ["home", "search", "parse", "add", "delete", "recipe"];
         this._api = new API("none");
         this._language = getUserLocale();
+        const url = this._api.createUrl("/public/languages.json");
+        this._api.fetch("GET", url)
+        .then((json) => { 
+            this._tableLanguages = json;
+
+            // Navbar
+            this._linkHome = new LinkPage(this, "link-home", "home-content");
+            this._linkSearch = new LinkPage(this, "link-search", "search-content");
+            this._linkParse = new LinkPage(this, "link-parse", "parse-content");
+            this._linkAdd = new LinkPage(this, "link-add", "add-content");
+            this._lindDelete = new LinkPage(this, "link-delete", "delete-content");
+            this._switchDarkMode = new SwitchDarkMode("dark-mode-switch", "html-main");
+
+            // Buttons
+            //this._btnTest = new ButtonAPI("testButton", "primary", "xlarge", this._api);
+            // Search page
+            this._searchTags = new GridSearchTags(this, "search-grid-tag");
+            this._search = new GridSearch(this, "search-grid", "search-input");
+            // Parse page
+            this._parse = new ButtonApiModal(this, "parse-button", undefined, "parse-modal");
+            this._parse.addClickFunction(async (event) => {
+                event.preventDefault();
+
+                // Send url to backend
+                const elementUrl = document.getElementById("parse-url")
+                const urlRecipe = elementUrl.value;
+                const urlServer = this._api.createUrl("/parse");
+                const payload = {
+                    url: urlRecipe
+                }
+                const result = await this._api.fetch("POST", urlServer, payload);
+
+                // Check result and report back to user
+                if (result && result._id) {
+                    elementUrl.textContent = "";
+                    this._recipe.addRecipeToPage(result._id);
+                    this.setPage("recipe");
+                }
+            })
+            // Recipe page
+            this._recipe = new Recipe(this, "recipe-content");
+        })
+        .catch((error) => console.error(error));
         console.log(this._language);
-
-        // Navbar
-        this._linkHome = new LinkPage(this, "link-home", "home-content");
-        this._linkSearch = new LinkPage(this, "link-search", "search-content");
-        this._linkParse = new LinkPage(this, "link-parse", "parse-content");
-        this._linkAdd = new LinkPage(this, "link-add", "add-content");
-        this._lindDelete = new LinkPage(this, "link-delete", "delete-content");
-        this._switchDarkMode = new SwitchDarkMode("dark-mode-switch", "html-main");
-        
-        // Buttons
-        //this._btnTest = new ButtonAPI("testButton", "primary", "xlarge", this._api);
-        // Search page
-        this._searchTags = new GridSearchTags(this, "search-grid-tag");
-        this._search = new GridSearch(this, "search-grid", "search-input");
-        // Parse page
-        this._parse = new ButtonApiModal(this, "parse-button", undefined, "parse-modal");
-        this._parse.addClickFunction(async (event) => {
-            event.preventDefault();
-            
-            // Send url to backend
-            const elementUrl = document.getElementById("parse-url")
-            const urlRecipe = elementUrl.value;
-            const urlServer = this._api.createUrl("/parse");
-            const payload = {
-                url: urlRecipe
-            }
-            const result = await this._api.fetch("POST", urlServer, payload);
-            
-            // Check result and report back to user
-            if (result && result._id) {
-                elementUrl.textContent = "";
-                this._recipe.addRecipeToPage(result._id);
-                this.setPage("recipe");
-            }
-        }) 
-        // Recipe page
-        this._recipe = new Recipe(this, "recipe-content");
-
-        // My stuff 
-        const rootStyles = getComputedStyle(document.documentElement);
-        const picoCardBackgroundColor = rootStyles.getPropertyValue('--pico-card-border-color').trim();
-        
-        // Lighten the color by 20%
-        const lighterColor = this.createLighterColor(picoCardBackgroundColor, 20);
-        
-
+        console.log(this._tableLanguages);   
     }
 
     init() {
@@ -81,6 +80,19 @@ class Client {
             }
             div.hidden = true;
         }
+    }
+
+    setLanguage(language) {
+        console.log(`Set languange to ${language}`);
+        this._language = language;
+        this._searchTags.setLanguage();
+    }
+
+    getWord(word, table, setFirstUpperCase = false) {
+        const lookup = word.toLowerCase();
+        let text = this._tableLanguages[table][lookup][this._language];
+        if (setFirstUpperCase) text = text[0].toUpperCase() + text.slice(1);
+        return text;
     }
 
     /**

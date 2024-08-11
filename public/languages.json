@@ -1,61 +1,81 @@
 {
+    "general": {
+        "search": {
+            "en-US": "search",
+            "sv-SE": "sök",
+            "fr-FR": "",
+            "de-DE": ""
+        }
+    },
     "baking": {
         "cocoa": {
+            "en-US": "cocoa",
             "sv-SE": "kakao",
             "fr-FR": "cacao",
             "de-DE": "kakao"
         },
         "chocolate": {
+            "en-US": "chocolate",
             "sv-SE": "choklad",
             "fr-FR": "chocolat",
             "de-DE": "schokolade"
         },
         "strawberry": {
+            "en-US": "strawberry",
             "sv-SE": "jordgubbe",
             "fr-FR": "fraise",
             "de-DE": "erdbeere"
         },
         "vanilla": {
+            "en-US": "vanilla",
             "sv-SE": "vanilj",
             "fr-FR": "vanille",
             "de-DE": "vanille"
         },
         "raspberry": {
+            "en-US": "raspberry",
             "sv-SE": "hallon",
             "fr-FR": "framboise",
             "de-DE": "himbeere"
         },
         "orange": {
+            "en-US": "orange",
             "sv-SE": "apelsin",
             "fr-FR": "orange",
             "de-DE": "orange"
         },
         "apple": {
+            "en-US": "apple",
             "sv-SE": "äpple",
             "fr-FR": "pomme",
             "de-DE": "apfel"
         },
         "blueberry": {
+            "en-US": "blueberry",
             "sv-SE": "blåbär",
             "fr-FR": "myrtille",
             "de-DE": "blaubeere"
         },
         "coffee": {
+            "en-US": "coffee",
             "sv-SE": "kaffe",
             "fr-FR": "café",
             "de-DE": "kaffee"
         },
         "cinnamon": {
+            "en-US": "cinnamon",
             "sv-SE": "kanel",
             "fr-FR": "cannelle",
             "de-DE": "zimt"
         },
         "butter": {
+            "en-US": "butter",
             "sv-SE": "smör",
             "fr-FR": "beurre",
             "de-DE": "butter"
         },
         "egg": {
+            "en-US": "egg",
             "sv-SE": "ägg",
             "fr-FR": "œuf",
             "de-DE": "ei"
@@ -63,76 +83,91 @@
     },
     "meal": {
         "chicken": {
+            "en-US": "chicken",
             "sv-SE": "kyckling",
             "fr-FR": "poulet",
             "de-DE": "hähnchen"
         },
         "pasta": {
+            "en-US": "pasta",
             "sv-SE": "pasta",
             "fr-FR": "pâtes",
             "de-DE": "nudeln"
         },
         "sausage": {
+            "en-US": "sausage",
             "sv-SE": "korv",
             "fr-FR": "saucisse",
             "de-DE": "wurst"
         },
         "salmon": {
+            "en-US": "salmon",
             "sv-SE": "lax",
             "fr-FR": "saumon",
             "de-DE": "lachs"
         },
         "rice": {
+            "en-US": "rice",
             "sv-SE": "ris",
             "fr-FR": "riz",
             "de-DE": "reis"
         },
         "potato": {
+            "en-US": "potato",
             "sv-SE": "potatis",
             "fr-FR": "pomme de terre",
             "de-DE": "kartoffel"
         },
         "pork": {
+            "en-US": "pork",
             "sv-SE": "fläskkött",
             "fr-FR": "porc",
             "de-DE": "schweinefleisch"
         },
         "red lentils": {
+            "en-US": "red lentils",
             "sv-SE": "röda linser",
             "fr-FR": "lentilles rouges",
             "de-DE": "rote linsen"
         },
         "cod": {
+            "en-US": "cod",
             "sv-SE": "torsk",
             "fr-FR": "morue",
             "de-DE": "kabeljau"
         },
         "shrimp": {
+            "en-US": "shrimp",
             "sv-SE": "räkor",
             "fr-FR": "crevettes",
             "de-DE": "garnelen"
         },
         "beef": {
+            "en-US": "beef",
             "sv-SE": "nötkött",
             "fr-FR": "bœuf",
             "de-DE": "rindfleisch"
         },
         "lamb": {
+            "en-US": "lamb",
             "sv-SE": "lammkött",
             "fr-FR": "agneau",
             "de-DE": "lammfleisch"
         },
         "duck": {
+            "en-US": "duck",
             "sv-SE": "anka",
             "fr-FR": "canard",
             "de-DE": "ente"
         },
         "trout": {
+            "en-US": "trout",
             "sv-SE": "öring",
             "fr-FR": "truite",
             "de-DE": "forelle"
         },
         "tuna": {
+            "en-US": "tuna",
             "sv-SE": "tonfisk",
             "fr-FR": "thon",
             "de-DE": "thunfisch"
