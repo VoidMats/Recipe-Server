@@ -1,0 +1,141 @@
+{
+    "baking": {
+        "cocoa": {
+            "sv-SE": "kakao",
+            "fr-FR": "cacao",
+            "de-DE": "kakao"
+        },
+        "chocolate": {
+            "sv-SE": "choklad",
+            "fr-FR": "chocolat",
+            "de-DE": "schokolade"
+        },
+        "strawberry": {
+            "sv-SE": "jordgubbe",
+            "fr-FR": "fraise",
+            "de-DE": "erdbeere"
+        },
+        "vanilla": {
+            "sv-SE": "vanilj",
+            "fr-FR": "vanille",
+            "de-DE": "vanille"
+        },
+        "raspberry": {
+            "sv-SE": "hallon",
+            "fr-FR": "framboise",
+            "de-DE": "himbeere"
+        },
+        "orange": {
+            "sv-SE": "apelsin",
+            "fr-FR": "orange",
+            "de-DE": "orange"
+        },
+        "apple": {
+            "sv-SE": "äpple",
+            "fr-FR": "pomme",
+            "de-DE": "apfel"
+        },
+        "blueberry": {
+            "sv-SE": "blåbär",
+            "fr-FR": "myrtille",
+            "de-DE": "blaubeere"
+        },
+        "coffee": {
+            "sv-SE": "kaffe",
+            "fr-FR": "café",
+            "de-DE": "kaffee"
+        },
+        "cinnamon": {
+            "sv-SE": "kanel",
+            "fr-FR": "cannelle",
+            "de-DE": "zimt"
+        },
+        "butter": {
+            "sv-SE": "smör",
+            "fr-FR": "beurre",
+            "de-DE": "butter"
+        },
+        "egg": {
+            "sv-SE": "ägg",
+            "fr-FR": "œuf",
+            "de-DE": "ei"
+        }
+    },
+    "meal": {
+        "chicken": {
+            "sv-SE": "kyckling",
+            "fr-FR": "poulet",
+            "de-DE": "hähnchen"
+        },
+        "pasta": {
+            "sv-SE": "pasta",
+            "fr-FR": "pâtes",
+            "de-DE": "nudeln"
+        },
+        "sausage": {
+            "sv-SE": "korv",
+            "fr-FR": "saucisse",
+            "de-DE": "wurst"
+        },
+        "salmon": {
+            "sv-SE": "lax",
+            "fr-FR": "saumon",
+            "de-DE": "lachs"
+        },
+        "rice": {
+            "sv-SE": "ris",
+            "fr-FR": "riz",
+            "de-DE": "reis"
+        },
+        "potato": {
+            "sv-SE": "potatis",
+            "fr-FR": "pomme de terre",
+            "de-DE": "kartoffel"
+        },
+        "pork": {
+            "sv-SE": "fläskkött",
+            "fr-FR": "porc",
+            "de-DE": "schweinefleisch"
+        },
+        "red lentils": {
+            "sv-SE": "röda linser",
+            "fr-FR": "lentilles rouges",
+            "de-DE": "rote linsen"
+        },
+        "cod": {
+            "sv-SE": "torsk",
+            "fr-FR": "morue",
+            "de-DE": "kabeljau"
+        },
+        "shrimp": {
+            "sv-SE": "räkor",
+            "fr-FR": "crevettes",
+            "de-DE": "garnelen"
+        },
+        "beef": {
+            "sv-SE": "nötkött",
+            "fr-FR": "bœuf",
+            "de-DE": "rindfleisch"
+        },
+        "lamb": {
+            "sv-SE": "lammkött",
+            "fr-FR": "agneau",
+            "de-DE": "lammfleisch"
+        },
+        "duck": {
+            "sv-SE": "anka",
+            "fr-FR": "canard",
+            "de-DE": "ente"
+        },
+        "trout": {
+            "sv-SE": "öring",
+            "fr-FR": "truite",
+            "de-DE": "forelle"
+        },
+        "tuna": {
+            "sv-SE": "tonfisk",
+            "fr-FR": "thon",
+            "de-DE": "thunfisch"
+        }
+    }
+}

@@ -12,7 +12,7 @@ export default function readEnvironment(path = ".env") {
             },
             SERVER_LANGUAGES: {
                 type: "string",
-                default: "en-US, sv-SE",
+                default: "en-US, sv-SE, fr-FR, de-DE",
                 description: "Which languages are the server supporting"
             },
             PRINT_ROUTES: {
