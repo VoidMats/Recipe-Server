@@ -1,4 +1,10 @@
 {
+    "languages": {
+        "en-US": "English",
+        "sv-SE": "Svenska",
+        "fr-FR": "Français",
+        "de-DE": "Deutsch"
+    },
     "general": {
         "search": {
             "en-US": "search",

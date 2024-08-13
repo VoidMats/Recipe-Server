@@ -9,6 +9,8 @@ export class Link {
         //this._class = "pure-menu-item";
         //this._link.setAttribute("class", this._class);
     }
+
+    
 }
 
 export class LinkPage extends Link {

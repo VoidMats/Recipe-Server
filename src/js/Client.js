@@ -16,6 +16,7 @@ class Client {
         this.__pages = ["home", "search", "parse", "add", "delete", "recipe"];
         this._api = new API("none");
         this._language = getUserLocale();
+        
         const url = this._api.createUrl("/public/languages.json");
         this._api.fetch("GET", url)
         .then((json) => { 
@@ -28,9 +29,9 @@ class Client {
             this._linkAdd = new LinkPage(this, "link-add", "add-content");
             this._lindDelete = new LinkPage(this, "link-delete", "delete-content");
             this._switchDarkMode = new SwitchDarkMode("dark-mode-switch", "html-main");
+            // Set selected language according to browser 
+            document.getElementById("language-selection").textContent = this._tableLanguages["languages"][this._language];
 
-            // Buttons
-            //this._btnTest = new ButtonAPI("testButton", "primary", "xlarge", this._api);
             // Search page
             this._searchTags = new GridSearchTags(this, "search-grid-tag");
             this._search = new GridSearch(this, "search-grid", "search-input");
@@ -47,7 +48,7 @@ class Client {
                     url: urlRecipe
                 }
                 const result = await this._api.fetch("POST", urlServer, payload);
-
+                
                 // Check result and report back to user
                 if (result && result._id) {
                     elementUrl.textContent = "";
@@ -59,8 +60,6 @@ class Client {
             this._recipe = new Recipe(this, "recipe-content");
         })
         .catch((error) => console.error(error));
-        console.log(this._language);
-        console.log(this._tableLanguages);   
     }
 
     init() {
@@ -82,9 +81,15 @@ class Client {
         }
     }
 
+    /**
+     * 
+     * @param { String } language -  
+     */
     setLanguage(language) {
         console.log(`Set languange to ${language}`);
         this._language = language;
+        document.getElementById("language-selection").textContent = this._tableLanguages["languages"][this._language];
+
         this._searchTags.setLanguage();
     }
 
