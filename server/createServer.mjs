@@ -23,7 +23,7 @@ export default function createServer(config) {
         printRoutes: config.PRINT_ROUTES
     };
 
-    const CONFIG = {  //Freeze ??
+    const CONFIG = {
         logger: true,
         bodyLimit: 1024 * 1024,                                     // 1 mb
         pluginTimeout: 20000,

@@ -14,10 +14,11 @@ class Client {
 
     constructor() {
         this.__pages = ["home", "search", "parse", "add", "delete", "recipe"];
-        this._api = new API("none");
+        this._api = new API("none", { backend: "http://localhost:7090"});
         this._language = getUserLocale();
         
         const url = this._api.createUrl("/public/languages.json");
+        console.log(url);
         this._api.fetch("GET", url)
         .then((json) => { 
             this._tableLanguages = json;

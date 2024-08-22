@@ -12,7 +12,7 @@ export default function readEnvironment(path = ".env") {
             },
             SERVER_LANGUAGES: {
                 type: "string",
-                default: "en-US, sv-SE, fr-FR, de-DE",
+                default: "en-US,sv-SE,fr-FR,de-DE",
                 description: "Which languages are the server supporting"
             },
             PRINT_ROUTES: {
@@ -58,5 +58,7 @@ export default function readEnvironment(path = ".env") {
         }
     }
 
-    return envSchema({ schema, dotenv: { path }});
+    const config = envSchema({ schema, dotenv: { path }});
+    config.SERVER_LANGUAGES = config.SERVER_LANGUAGES.split(',').map(e => e.trim());
+    return config;
 }

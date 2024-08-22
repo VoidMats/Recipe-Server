@@ -6,17 +6,22 @@ export class API {
     /**
      * 
      * @param { String } auth 
-     * @param { Object } options { version: String, backend: String }
+     * @param { Object } options - Option object for the API
+     * @param { String } options.version - Override the version of the backend 
+     * @param { String } options.backend - Override the backend ip
      */
     constructor(auth = "none", options = {}) {
         const { version, backend } = options;
         this._token = null;
         this._auth = auth;
         this.location = document.location;
-        this.port = process.env.SERVER_PORT;
+        //this.port = process.env.SERVER_PORT;
         this.version = version || "v1";
-        const http = /(https?:\/\/.*)(:\d*)\/?(.*)/.exec(document.location.origin)[1];
-        this.backend = `${http}:${7090}`;
+        if (backend) {
+            this.backend = backend;
+        } else {
+            this.backend = `${this.location.origin}`
+        }
     }
 
     createUrl(route, queries = {}) {
@@ -80,16 +85,16 @@ export class API {
         if (response.ok) {
             const type = (response.headers) ? response.headers.get("Content-Type") : undefined;
             console.log(type);
-            switch (type?.toLowerCase()) {
-                case "application/json; charset=utf-8":
+            switch (type?.toLowerCase().replaceAll(' ', '')) {
+                case "application/json;charset=utf-8":
                 case "application/json":
                     return response.json();
                 case "application/octet-stream":
                     return response.body;
-                case "text/plain; charset=utf-8":
+                case "text/plain;charset=utf-8":
                 case "text/plain":
                     return response.text();
-                case "text/html; charset=utf-8":
+                case "text/html;charset=utf-8":
                 case "text/html":
                     return response.text();
                 default:

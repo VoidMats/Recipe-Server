@@ -43,19 +43,8 @@ const db = fastifyPlugin(
             console.error("Path/Folder for schemas does not exist");
             process.exit(2);
         };
-        const pathSchemas = await promises.readdir(pathComplete);
-    
-        let fileBucket;
-        for (const pathSchema of pathSchemas) {
-            let name = path.basename(pathSchema).split(".")[0];
-            const schema = JSON.parse(readFileSync(path.join(pathComplete, pathSchema)));
-            
-            // Check for filebucket
-            if (name === "file") {
-                name = `${__FILE_BUCKET_NAME}.files`;
-                fileBucket = new GridFSBucket(db, { bucketName: __FILE_BUCKET_NAME });
-            }
 
+        const createCollection = async (name, schema) => {
             // Add collection to database if missing
             try {
                 await db.command({ collMod: name, validator: { $jsonSchema: schema }});
@@ -71,6 +60,28 @@ const db = fastifyPlugin(
                     process.exit(2);
                 }
             }
+        } 
+    
+        let fileBucket;
+        const pathSchemas = await promises.readdir(pathComplete); 
+        for (const pathSchema of pathSchemas) {
+            let name = path.basename(pathSchema).split(".")[0];
+            const schema = JSON.parse(readFileSync(path.join(pathComplete, pathSchema)));
+            
+            // Check for filebucket
+            if (name === "file") {
+                name = `${__FILE_BUCKET_NAME}.files`;
+                fileBucket = new GridFSBucket(db, { bucketName: __FILE_BUCKET_NAME });
+                await createCollection(name, schema);
+            }
+
+            // Check for recipe, which need to be a collection for each language
+            if (name === "recipe") {
+                for (const language of config.SERVER_LANGUAGES) {
+                    const dbName = `${name}-${language.toLowerCase()}`;
+                    await createCollection(dbName, schema);
+                }
+            } 
         }
         
         console.log("  - All database schemas was read from folder");
