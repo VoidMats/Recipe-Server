@@ -45,9 +45,15 @@ const createEmptyObject = (schema) =>  {
 
 export default class Parser {
 
-    constructor(html) {
+    /**
+     * 
+     * @param { String } html 
+     * @param { String } language -  
+     */
+    constructor(html, language) {
         this._dom = new jsdom.JSDOM(html);
         this._doc = this._dom.window.document;
+        this._language = language.toLowerCase();
 
         // Path already checked during startup
         const pathComplete = path.join(__dirname, "../../schemas/database");

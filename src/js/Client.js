@@ -90,7 +90,6 @@ class Client {
         console.log(`Set languange to ${language}`);
         this._language = language;
         document.getElementById("language-selection").textContent = this._tableLanguages["languages"][this._language];
-
         this._searchTags.setLanguage();
     }
 

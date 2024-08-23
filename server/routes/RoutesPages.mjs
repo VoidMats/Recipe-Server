@@ -10,7 +10,7 @@ export default async (fastify) => {
 
     fastify.post("/", async (request, reply) => {
 
-        let html, parser, recipe;
+        let html, parser, recipe, image;
         try {
             const response = await fetch(request.body.url); 
             if (response.ok) {
@@ -22,8 +22,9 @@ export default async (fastify) => {
         
         // From SVT
         if (request.body.url.startsWith("https://www.svt.se")) {
-            parser = new ParserSVT(html);
+            parser = new ParserSVT(html, "sv-SE");
             recipe = await parser.getRecipe();
+            image = await parser
         }
     
         // From Godare
@@ -45,6 +46,7 @@ export default async (fastify) => {
         */
 
         console.log(recipe);
+        console.log(image);
         // Add to database
         try {
             const resultSaveDatabase = await fastify.mongo.db.collection("recipe").insertOne(recipe);
@@ -60,22 +62,7 @@ export default async (fastify) => {
     });
 
     const _getPicture = async (url) => {
-        // Get picture
-        let stream;
-        try {
-            const response = await fetch(url); 
-            if (response.ok) {
-                stream = response.body;
-            }
-        } catch(error) {
-            console.log(error);
-        }
-        // Import picture
-        try {
-            await fastify.mongo.db.collection("file").insertOne(picture);
-        } catch(error) {
-            return createHttpError(500, error);
-        }
+        
     }
 
     const _createDatabaseDocument = (document) => {

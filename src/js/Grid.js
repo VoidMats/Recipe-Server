@@ -67,7 +67,9 @@ export class GridSearch extends Grid {
             });
             
             const text = event.target.value;
-            const url = this._client._api.createUrl("/recipe/search", { text, ingredients });
+            const url = this._client._api.createUrl("/recipe/search", 
+                { text, ingredients, language: this._client._language }
+            );
             const answer = await this._client._api.fetch("GET", url);
 
             // Remove event listener and any card

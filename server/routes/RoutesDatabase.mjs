@@ -152,12 +152,12 @@ export default async (fastify) => {
      * Route to search for recipes. 
      * @param { Object } query - request.query
      * @param { String } query.text - Search text in title
-     * @param { Array } query.ingredients - Array of ingredients that the recipe need to have
+     * @param { Array } query.ingredients - Array of ingredients that the recipe need to have.
+     * @param { String } query.language - Country code for the langauge to use for the search.
      * @returns { Array } Returns an array with recipes from the search critera 
      */
     fastify.get("/recipe/search", async (request) => {
-        const { text, ingredients } = request.query;
-        console.log(ingredients)
+        const { text, ingredients, language } = request.query;
 
         const query = { title: { "$regex": `${text}`, "$options": "i" } };
     
@@ -173,7 +173,8 @@ export default async (fastify) => {
         }
 
         try {
-            const recipes = await fastify.mongo.db.collection("recipe").find(query).toArray();
+            const recipes = await fastify.mongo.db.collection(`recipe-${language.toLowerCase()}`)
+            .find(query).toArray();
             return _createAnswer(true, recipes);
         } catch(error) {
             console.error(error);
