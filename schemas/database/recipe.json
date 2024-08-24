@@ -32,7 +32,7 @@
             "description": "Number of servings of the recipe"
         },
         "image": {
-            "type": "string",
+            "bsonType": "objectId",
             "description": "Id of the image"
         },
         "components": {

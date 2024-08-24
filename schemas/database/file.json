@@ -5,6 +5,9 @@
         "metadata": {
             "type": "object",
             "properties": {
+                "id": {
+                    "bsonType": "objectId"
+                },
                 "created": {
                     "bsonType": "date"
                 }

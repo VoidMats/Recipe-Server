@@ -38,7 +38,6 @@ export class GridSearchTags extends Grid {
         for (const button of buttons) {
             const word = button.getAttribute("word");
             const text = this._client.getWord(word, "meal", true);
-            console.log(text);
             button.textContent = text;
         }
     }
@@ -89,11 +88,14 @@ export class GridSearch extends Grid {
                 card.appendChild(header);
 
                 // Create body 
-                // TODO Get image from database
                 const body = document.createElement("img");
                 body.setAttribute("class", "article-img");
-                body.src = this._client._api.createUrl("/public/missing.png");
-                body.alt = "test-image";                                  
+                if (recipe.image) {
+                    body.src = this._client._api.createUrl(`/file/${recipe.image}/download`);
+                } else {
+                    body.src = this._client._api.createUrl(`/public/missing.png`);
+                }
+                body.alt = `image-${recipe.image}`;                                  
                 card.appendChild(body);
 
                 // Create footer

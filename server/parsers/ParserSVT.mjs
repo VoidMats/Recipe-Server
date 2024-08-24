@@ -1,11 +1,12 @@
+import fetch from "node-fetch";
 import { ObjectId } from "mongodb";
 
 import Parser from "./Parser.mjs";
 
 export default class ParserSVT extends Parser {
 
-    constructor(html) {
-        super(html);
+    constructor(url, html, language) {
+        super(url, html, language);
     }
 
     async getRecipe() {
@@ -14,30 +15,30 @@ export default class ParserSVT extends Parser {
             const head = this._doc.head.querySelector('meta[property="og:site_name"][content="SVT recept"]');
             if (!head) throw new Error(`The url does not contain any recipe from the SVT site`);
 
-            const recipe = { _id: new ObjectId() };
+            this.recipe = { _id: new ObjectId() };
 
             // Title, description etc..
-            recipe["title"] = this._doc.head.querySelector("[name~=title][content]").content;
-            recipe["description"] = this._doc.head.querySelector("[name~=description][content]").content;
+            this.recipe["title"] = this._doc.head.querySelector("[name~=title][content]").content;
+            this.recipe["description"] = this._doc.head.querySelector("[name~=description][content]").content;
             const spanTime = this._doc.body.querySelector("span.Recipe_svtmat_recipe__estimateText__4PuMH");
-            recipe["time"] = "";
+            this.recipe["time"] = "";
             for (const node of spanTime.childNodes) {
-                if (node.textContent) recipe["time"] += node.textContent;
+                if (node.textContent) this.recipe["time"] += node.textContent;
             };
 
             // Keywords
             const listKeywords = this._doc.body.querySelector("ul.Recipe_svtmat_recipe__tagList__UmBWV");
-            recipe["keywords"] = [];
+            this.recipe["keywords"] = [];
             for (const li of listKeywords.childNodes) {
-                recipe.keywords.push(li.firstChild.text);
+                this.recipe.keywords.push(li.firstChild.text);
             };
 
             // Servings
             const spanServings = this._doc.body.querySelector('span.Recipe_svtmat_recipe__portionsText__g1jgI');
-            recipe["servings"] = Number(spanServings.textContent);
+            this.recipe["servings"] = Number(spanServings.textContent);
 
             // Components
-            recipe["components"] = [];                      
+            this.recipe["components"] = [];                      
             const listNames = this._doc.body.querySelectorAll('h3[class*="Recipe_svtmat_recipe__ingredientsSubHeader"]');
             const listIngredients = this._doc.body.querySelector('div[class*="Recipe_svtmat_recipe__ingredientsListContainer"]');
             // Remove the first div, because it only contains, servings
@@ -49,7 +50,7 @@ export default class ParserSVT extends Parser {
             // TODO this could be done better
             if (listNames.length === 0) {
                 const subComponent = { 
-                    name: recipe.title,
+                    name: this.recipe.title,
                     ingredients: [] 
                 };
                 const ul = listIngredients.children[0].children[0];
@@ -70,7 +71,7 @@ export default class ParserSVT extends Parser {
                     if (size_unit && ingredient) portion["ingredient"] = ingredient;
                     subComponent.ingredients.push(portion);
                 }
-                recipe.components.push(subComponent);
+                this.recipe.components.push(subComponent);
             } else {
                 for (const element of listIngredients.children) {
                     const subComponent = { name : undefined, ingredients: [] };
@@ -97,43 +98,59 @@ export default class ParserSVT extends Parser {
                             }
                         }
                     }
-                    recipe.components.push(subComponent);
+                    this.recipe.components.push(subComponent);
                 }
             }
 
             // Instructions
-            recipe["instructions"] = [{ name: undefined, steps: [] }];
+            this.recipe["instructions"] = [{ name: undefined, steps: [] }];
             const listInstructions = this._doc.body.querySelector('div.Recipe_svtmat_recipe__instructionsContainer__oohtS');
             let idx = 0;
             for (const child of listInstructions.childNodes) {
                 if (child.nodeName === "H4") {
-                    recipe.instructions[idx].name = child.textContent;
+                    this.recipe.instructions[idx].name = child.textContent;
                 }
                 if (child.nodeName === "OL") {
                     for (const li of child.childNodes) {
-                        recipe.instructions[idx].steps.push(li.textContent);
+                        this.recipe.instructions[idx].steps.push(li.textContent);
                     }
                     // Start a new instruction
-                    recipe.instructions.push({ name: undefined, steps: [] });
+                    this.recipe.instructions.push({ name: undefined, steps: [] });
                     idx++;
                 }
             }
-            recipe.instructions.pop();
-            
-            return recipe;
+            this.recipe.instructions.pop();
         } catch(error) {
             console.log(error);
             return this._createEmptyResponse();
         }
     }
 
-    async getPicture(url) {
-        // Picture
-        const divPicture = this._doc.body.querySelector("div.Recipe_svtmat_recipe__mediaContainer__TUDv5");
-        const imgPicture = divPicture.querySelector("img");
-        console.log(imgPicture.src);
-        console.log(url);
-        //const urlPicture = new URL(url, imgPicture.src);
-        //await _getPicture(urlPicture)
+    async getPicture() {
+        try {
+            // Picture
+            const divPicture = this._doc.body.querySelector("div.Recipe_svtmat_recipe__mediaContainer__TUDv5");
+            const imgPicture = divPicture.querySelector("img");
+            const urlPicture = decodeURIComponent(imgPicture.src).split('?')[1].slice(4);
+            console.log(decodeURIComponent(imgPicture.src));
+            console.log(urlPicture);
+            //const urlPicture = new URL(this._url.origin, decodeURIComponent(imgPicture.src));
+            //console.log(urlPicture.href);
+            
+            // Get picture and add to database
+            this.recipe.image = new ObjectId();
+            const response = await fetch(urlPicture); 
+            if (response.ok) {
+                return response.body;
+                return await handleUploadFile(
+                    this.recipe.image, 
+                    recipe._id, 
+                    { id: this.recipe.image, created: new Date() },
+                    response.body
+                );
+            }
+        } catch(error) {
+            console.log(error);
+        }
     }
 }

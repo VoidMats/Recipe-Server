@@ -2,6 +2,8 @@ import { promises, readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import httpError from "http-errors";
+
 import fastifyPlugin from "fastify-plugin";
 import { MongoClient, MongoError, GridFSBucket } from "mongodb";
 import mongodbURI from "mongodb-uri";
@@ -96,10 +98,10 @@ const db = fastifyPlugin(
                 //return `Validation error: ${error.errorResponse}`;
                 return error.errorResponse;
             }
-            return error.errorResponse;
+            return (error.errorResponse) ? error.errorResponse : error;
         };
 
-        db.uploadFile = async (id, filename, metadata) => {
+        db.uploadFile = async (id, filename, userMetadata, inputStream) => {
             return new Promise(async (resolve, reject) => {
                 if (!filename) {
                     return reject(httpError(400, `filename is missing from query`));
@@ -114,13 +116,17 @@ const db = fastifyPlugin(
                 // Add new file
                 let metadata = { id, created: new Date() };
                 try {
-                    metadata = JSON.parse(metadata ?? "{}");
+                    if (userMetadata instanceof String) {
+                        metadata = JSON.parse(userMetadata ?? "{}");
+                    } else {
+                        metadata = userMetadata;
+                    }
                 } catch (error) {
                     return reject(httpError(400, `Invalid metadata: ${error}`));
                 }
                 // Upload file to filebucket
-                const stream = await fileBucket.openUploadStream(filename, { metadata });
-                stream.on("error", async (error) => {
+                const outputStream = await fileBucket.openUploadStream(filename, { metadata });
+                outputStream.on("error", async (error) => {
                     console.error(`GridFS upload stream failed. Calling abort to delete chunks. (reason: ${error})`);
                     try {
                         await stream.abort();
@@ -129,24 +135,30 @@ const db = fastifyPlugin(
                     }
                     return reject(error);
                 });
-                stream.on("finish", async (object) => {
+                outputStream.on("finish", async (object) => {
                     try {
-                        await fastify.mongo.db.collection(`${__FILE_BUCKET_NAME}.files`).updateOne(
-                            { _id: object._id },
-                            {
-                                $set: {
-                                    "metadata.id": id,
+                        console.log(object)
+                        if (object) {
+                            await fastify.mongo.db.collection(`${__FILE_BUCKET_NAME}.files`).updateOne(
+                                { _id: object._id },
+                                {
+                                    $set: {
+                                        "metadata.id": id,
+                                    },
                                 },
-                            },
-                        );
-                        resolve({ id });
+                            );
+                            resolve({ id });
+                        } else {
+                            //reject(`No object from uploaded file`);
+                            resolve({ id });
+                        }
                     } catch (error) {
                         console.error(`Error updating metadata for file ${id}: ${error}`);
                         console.error(error);
                         return reject(httpError(500, error));
                     }
                 });
-                request.body.pipe(stream);
+                inputStream.pipe(outputStream);
             });
         };
 

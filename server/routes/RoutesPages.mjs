@@ -1,6 +1,4 @@
-import jsdom from "jsdom";
 import fetch from "node-fetch";
-import { ObjectId } from "mongodb";
 import createHttpError from "http-errors";
 
 import RoutesDatabase from "./RoutesDatabase.mjs";
@@ -9,8 +7,8 @@ import ParserSVT from "../parsers/ParserSVT.mjs";
 export default async (fastify) => {
 
     fastify.post("/", async (request, reply) => {
-
-        let html, parser, recipe, image;
+        console.log(request.body)
+        let html, parser, recipe, stream;
         try {
             const response = await fetch(request.body.url); 
             if (response.ok) {
@@ -22,9 +20,10 @@ export default async (fastify) => {
         
         // From SVT
         if (request.body.url.startsWith("https://www.svt.se")) {
-            parser = new ParserSVT(html, "sv-SE");
-            recipe = await parser.getRecipe();
-            image = await parser
+            console.log(request.body.url);
+            parser = new ParserSVT(request.body.url, html, "sv-SE");
+            await parser.getRecipe();
+            stream = await parser.getPicture();
         }
     
         // From Godare
@@ -45,30 +44,33 @@ export default async (fastify) => {
         }
         */
 
-        console.log(recipe);
-        console.log(image);
+        console.log(parser.recipe);
         // Add to database
         try {
-            const resultSaveDatabase = await fastify.mongo.db.collection("recipe").insertOne(recipe);
-            if (resultSaveDatabase.acknowledged && resultSaveDatabase.insertedId === recipe._id) {
+            // Add picture
+            const resultSavePicture = await fastify.mongo.db.uploadFile(
+                parser.recipe.image,
+                parser.recipe._id.toString(),
+                { id: parser.recipe.image, created: new Date() },
+                stream
+            );
+            console.log(resultSavePicture)
+            if (resultSavePicture) {
+
+            }
+            // Add recipe
+            const resultSaveRecipe = await fastify.mongo.db
+            .collection(`recipe-${parser.language.toLowerCase()}`)
+            .insertOne(parser.recipe);
+            if (resultSaveRecipe.acknowledged && resultSaveRecipe.insertedId === parser.recipe._id) {
                 console.log("recipe is in database");
                 reply.type("application/json");
                 return JSON.stringify(recipe);
             }
+           
         } catch(error) {
             const strError = fastify.mongo.db.readError(error);
             return createHttpError(500, strError);
         }
     });
-
-    const _getPicture = async (url) => {
-        
-    }
-
-    const _createDatabaseDocument = (document) => {
-        // Validate with ajv
-
-        // Load to database
-        
-    }
 }

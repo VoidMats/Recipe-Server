@@ -47,24 +47,30 @@ export default class Parser {
 
     /**
      * 
-     * @param { String } html 
+     * @param { String } url - 
+     * @param { String } html -  
      * @param { String } language -  
      */
-    constructor(html, language) {
+    constructor(url, html, language) {
+        this._url = new URL(url);
         this._dom = new jsdom.JSDOM(html);
         this._doc = this._dom.window.document;
-        this._language = language.toLowerCase();
+        this._language = language?.toLowerCase();
+        this.recipe = {};
+        //this.recipe = this._createEmptyResponse();
 
         // Path already checked during startup
         const pathComplete = path.join(__dirname, "../../schemas/database");
         this._schema = JSON.parse(readFileSync(path.join(pathComplete, "recipe.json")));
     }
 
+    get language() { return this._language; }
+
     async getRecipe() {
         return undefined;
     }
 
-    async getPicture(url) {
+    async getPicture() {
         return undefined;
     }
 
