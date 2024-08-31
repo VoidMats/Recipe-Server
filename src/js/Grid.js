@@ -120,15 +120,7 @@ export class GridSearch extends Grid {
     }
 
     async setRecipePage(event) {
-        for (const id of this.__pages) {
-            const div = document.getElementById(`${id}-content`);
-            if (id === "recipe") {
-                div.hidden = false;
-                await this._recipe.addRecipeToPage(event.currentTarget.id);
-                continue;
-            }
-            div.hidden = true;
-        }
+        await this._recipe.addRecipeToPage(event.currentTarget.id);
     }
 
 

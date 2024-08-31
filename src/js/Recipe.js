@@ -1,4 +1,5 @@
 
+import { Alert } from "./Alert";
 
 export class Recipe {
 
@@ -52,7 +53,12 @@ export class Recipe {
         // Hide all pages
         this._client.__pages.forEach((id) => {
             const div = document.getElementById(`${id}-content`);
-            div.hidden = true;
+            if (id === "recipe") {
+                div.hidden = false;
+            } else {
+                div.hidden = true;
+            }
+
         });
 
         // Get recipe 
@@ -182,6 +188,8 @@ export class Recipe {
             root.appendChild(grid1);
             root.appendChild(grid2);
             root.appendChild(grid3);
+        } else {
+            new Alert("error", response.error, true);
         }
     }
 
