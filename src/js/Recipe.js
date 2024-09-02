@@ -62,7 +62,7 @@ export class Recipe {
         });
 
         // Get recipe 
-        const url = this._client._api.createUrl(`/recipe/${recipeId}`);
+        const url = this._client._api.createUrl(`/recipe/${recipeId}`, { language: this._client._language });
         const response = await this._client._api.fetch("GET", url);
         if (response.success) {
             const recipe = response.result;
@@ -113,7 +113,11 @@ export class Recipe {
             grid2.style.gap = '0';
 
             const img = document.createElement('img');
-            img.src = '/public/test.png';
+            if (recipe.image) {
+                img.src = this._client._api.createUrl(`/file/${recipe.image}/download`);
+            } else {
+                img.src = this._client._api.createUrl(`/public/missing.png`);
+            }
             img.alt = 'Recipe image';
             img.style.height = '100%';
 

@@ -10,7 +10,8 @@ export default async (fastify) => {
         console.log(request.body)
         let html, parser, recipe, stream;
         try {
-            const response = await fetch(request.body.url); 
+            const response = await fetch(request.body.url);
+            console.log(response.headers.get("Content-Type"));
             if (response.ok) {
                 html = await response.text();
             }
@@ -55,17 +56,16 @@ export default async (fastify) => {
                 stream
             );
             console.log(resultSavePicture)
-            if (resultSavePicture) {
-
-            }
-            // Add recipe
-            const resultSaveRecipe = await fastify.mongo.db
-            .collection(`recipe-${parser.language.toLowerCase()}`)
-            .insertOne(parser.recipe);
-            if (resultSaveRecipe.acknowledged && resultSaveRecipe.insertedId === parser.recipe._id) {
-                console.log("recipe is in database");
-                reply.type("application/json");
-                return JSON.stringify(recipe);
+            if (resultSavePicture.id) {
+                // Add recipe
+                const resultSaveRecipe = await fastify.mongo.db
+                .collection(`recipe-${parser.language.toLowerCase()}`)
+                .insertOne(parser.recipe);
+                if (resultSaveRecipe.acknowledged && resultSaveRecipe.insertedId === parser.recipe._id) {
+                    console.log("recipe is in database");
+                    reply.type("application/json");
+                    return JSON.stringify(recipe);
+                }
             }
            
         } catch(error) {

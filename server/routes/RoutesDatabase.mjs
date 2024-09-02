@@ -96,7 +96,6 @@ export default async (fastify) => {
     });
 
     fastify.get("/file/:id", async (request) => {
-        console.log("trigger getting file");
         const id = _validateObjectId(request.params.id);
         const file = await fastify.mongo.db
             .collection(`${__FILE_BUCKET_NAME}.files`)
@@ -126,9 +125,10 @@ export default async (fastify) => {
      */
     fastify.post("/recipe", async (request) => {
         const document = request.body;
+        const { language } = request.query;
         document._id = _validateObjectId(document._id);
         try {
-            const result = await fastify.mongo.db.collection("recipe").insertOne(document);
+            const result = await fastify.mongo.db.collection(`recipe-${language.toLowerCase()}`).insertOne(document);
             return _createAnswer(true, result);
         } catch(error) {
             return createHttpError(500, error);
@@ -140,7 +140,8 @@ export default async (fastify) => {
      */
     fastify.get("/recipe/:id", async (request) => {
         const id = _validateObjectId(request.params.id);
-        const recipe = await fastify.mongo.db.collection("recipe").findOne({ _id: id });
+        const { language } = request.query;
+        const recipe = await fastify.mongo.db.collection(`recipe-${language.toLowerCase()}`).findOne({ _id: id });
         if (!recipe) {
             const error = createHttpError(404, `Recipe ${id} not found`);
             return _createAnswer(false, undefined, error);

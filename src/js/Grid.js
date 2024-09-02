@@ -120,6 +120,7 @@ export class GridSearch extends Grid {
     }
 
     async setRecipePage(event) {
+        console.log(event.currentTarget)
         await this._recipe.addRecipeToPage(event.currentTarget.id);
     }
 

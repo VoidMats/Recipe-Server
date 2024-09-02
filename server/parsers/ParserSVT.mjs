@@ -134,20 +134,12 @@ export default class ParserSVT extends Parser {
             const urlPicture = decodeURIComponent(imgPicture.src).split('?')[1].slice(4);
             console.log(decodeURIComponent(imgPicture.src));
             console.log(urlPicture);
-            //const urlPicture = new URL(this._url.origin, decodeURIComponent(imgPicture.src));
-            //console.log(urlPicture.href);
             
             // Get picture and add to database
             this.recipe.image = new ObjectId();
             const response = await fetch(urlPicture); 
             if (response.ok) {
                 return response.body;
-                return await handleUploadFile(
-                    this.recipe.image, 
-                    recipe._id, 
-                    { id: this.recipe.image, created: new Date() },
-                    response.body
-                );
             }
         } catch(error) {
             console.log(error);
