@@ -70,28 +70,40 @@ export class Recipe {
             // Get container element
             const root = document.getElementById(this._containerId);
             root.hidden = false;
-
+            // Header
             const header = document.createElement('h2');
             header.className = 'content-subhead';
             header.textContent = recipe.title;
-
+            // Info tag
             const info = document.createElement("div");
-            info.setAttribute("class", "recipe-info");
-            // Create image element for the icon
+            info.classList.add("recipe-info");
+            // Info serving
+            const infoServing = document.createElement("div");
+            infoServing.classList.add("recipe-info-tag");
             const iconServing = document.createElement("img");
             iconServing.src = this._client._api.createUrl("/public/cutlery.png");
             iconServing.alt, "Servings";
-            iconServing.setAttribute("class", "recipe-info-icon");
+            iconServing.classList.add("recipe-info-icon");
+            const textServing = document.createTextNode(`${recipe.servings}`);
+            infoServing.appendChild(iconServing);
+            infoServing.appendChild(textServing);
+            // Info time
+            const infoTime = document.createElement("div");
+            infoTime.classList.add("recipe-info-tag");
             const iconTime = document.createElement("img");
             iconTime.src = this._client._api.createUrl("/public/clock.png");
             iconTime.alt = "Time";
-            iconTime.setAttribute("class", "recipe-info-icon");
-            // Append the icon and text to the info bar
-            info.appendChild(iconServing);
-            info.appendChild(document.createTextNode(` ${recipe.servings}   `));
-            info.appendChild(iconTime);
-            info.appendChild(document.createTextNode(` ${recipe.time} `));
+            iconTime.classList.add("recipe-info-icon");
+            const textTime = document.createTextNode(`${recipe.time}`);
+            infoTime.appendChild(iconTime);
+            infoTime.appendChild(textTime);
+            // Info temperature
+            
+            // Group them into info tag
+            info.appendChild(infoServing);
+            info.appendChild(infoTime);
 
+            //
             const grid1 = document.createElement('div');
             grid1.className = 'grid';
             grid1.style.display = 'grid';

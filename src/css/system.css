@@ -58,7 +58,7 @@ header {
 
 /** Selection **/
 
-/** Article **/
+/* #region Article */
 
 article {
     background-color: var(--pico-card-background-color);
@@ -98,16 +98,47 @@ article .article-footer-icon {
     margin-right: 5px;
 }
 
+/* #endregion Article */
+
+/* #region Recipe */
+
 .recipe-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+.recipe-info-tag {
+    display: flex;
+    align-items: center;
     font-size: medium;
-    text-align: left;
-    padding: 10px, 20px;
+    background-color: var(--pico-switch-background-color);
+    padding: 10px 20px;
+    border-radius: 10px;
 }
 
 .recipe-info-icon {
     height: 1em;
     margin-right: 5px;
 }
+
+.recipe-info-text {
+    margin-right: 5px;
+}
+
+/* #endregion Recipe */
+
+/* 
+.recipe-info {
+    font-size: medium;
+    text-align: left;
+    padding: 10px, 20px;
+}
+*/
+
+/* #region Grid */
 
 .grid {
     display: grid;
@@ -129,7 +160,9 @@ article .article-footer-icon {
     padding: 0.5em;
 }
 
-/** Buttons **/
+/* #endregion Grid */
+
+/* #region Buttons */
 
 .button-search-tag {
     padding: 10px 10px;
@@ -142,6 +175,8 @@ article .article-footer-icon {
     background-color: var(--pico-primary-hover-background);
     color: var(--pico-primary-inverse);
 }
+
+/* #endregion Buttons */
 
 @media (prefers-color-scheme: dark) {
     :root {

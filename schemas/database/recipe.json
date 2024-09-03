@@ -20,6 +20,20 @@
             "type": "string",
             "description": "Cooking time of the recipe. This is a string, because so many recipes has different time"
         },
+        "temperature": {
+            "type": "object",
+            "description": "Temperature on oven or equal",
+            "properties": {
+                "unit": {
+                    "type": "string",
+                    "enum": ["c", "C", "f", "F"]
+                },
+                "value": {
+                    "type": "string",
+                    "description": "Add either a value or a range"
+                }
+            }
+        },
         "keywords": {
             "type": "array",
             "description": "Keywords for the recipe",
