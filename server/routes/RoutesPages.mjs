@@ -7,11 +7,9 @@ import ParserSVT from "../parsers/ParserSVT.mjs";
 export default async (fastify) => {
 
     fastify.post("/", async (request, reply) => {
-        console.log(request.body)
         let html, parser, recipe, stream;
         try {
             const response = await fetch(request.body.url);
-            console.log(response.headers.get("Content-Type"));
             if (response.ok) {
                 html = await response.text();
             }
@@ -48,26 +46,26 @@ export default async (fastify) => {
         console.log(parser.recipe);
         // Add to database
         try {
-            // Add picture
-            const resultSavePicture = await fastify.mongo.db.uploadFile(
-                parser.recipe.image,
-                parser.recipe._id.toString(),
-                { id: parser.recipe.image, created: new Date() },
-                stream
-            );
-            console.log(resultSavePicture)
-            if (resultSavePicture.id) {
-                // Add recipe
-                const resultSaveRecipe = await fastify.mongo.db
-                .collection(`recipe-${parser.language.toLowerCase()}`)
-                .insertOne(parser.recipe);
-                if (resultSaveRecipe.acknowledged && resultSaveRecipe.insertedId === parser.recipe._id) {
-                    console.log("recipe is in database");
-                    reply.type("application/json");
-                    return JSON.stringify(recipe);
+            if (parser.recipe) {
+                // Add picture
+                const resultSavePicture = await fastify.mongo.db.uploadFile(
+                    parser.recipe.image,
+                    parser.recipe._id.toString(),
+                    { id: parser.recipe.image, created: new Date() },
+                    stream
+                );
+                if (resultSavePicture.id) {
+                    // Add recipe
+                    const resultSaveRecipe = await fastify.mongo.db
+                    .collection(`recipe-${parser.language.toLowerCase()}`)
+                    .insertOne(parser.recipe);
+                    if (resultSaveRecipe.acknowledged && resultSaveRecipe.insertedId === parser.recipe._id) {
+                        console.log("recipe is in database");
+                        reply.type("application/json");
+                        return JSON.stringify(recipe);
+                    }
                 }
             }
-           
         } catch(error) {
             const strError = fastify.mongo.db.readError(error);
             return createHttpError(500, strError);

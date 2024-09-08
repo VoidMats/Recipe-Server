@@ -119,6 +119,16 @@ article .article-footer-icon {
     border-radius: 10px;
 }
 
+.recipe-info-keyword {
+    display: flex;
+    align-items: center;
+    font-size: medium;
+    background-color: var(--pico-primary-hover);
+    color: var(--pico-primary-inverse);
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
 .recipe-info-icon {
     height: 1em;
     margin-right: 5px;
@@ -128,15 +138,18 @@ article .article-footer-icon {
     margin-right: 5px;
 }
 
+.recipe-image {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.recipe-textarea {
+    height: 100%;
+    margin-bottom: 0;
+}
+
 /* #endregion Recipe */
 
-/* 
-.recipe-info {
-    font-size: medium;
-    text-align: left;
-    padding: 10px, 20px;
-}
-*/
 
 /* #region Grid */
 

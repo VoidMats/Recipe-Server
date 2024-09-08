@@ -103,7 +103,7 @@ export default class ParserSVT extends Parser {
             }
 
             // Instructions
-            this.recipe["instructions"] = [{ name: undefined, steps: [] }];
+            this.recipe["instructions"] = [{ name: "Så lagar du", steps: [] }];
             const listInstructions = this._doc.body.querySelector('div.Recipe_svtmat_recipe__instructionsContainer__oohtS');
             let idx = 0;
             for (const child of listInstructions.childNodes) {
@@ -118,8 +118,21 @@ export default class ParserSVT extends Parser {
                     this.recipe.instructions.push({ name: undefined, steps: [] });
                     idx++;
                 }
+                // If the instruction contain only one instruction it will be a list of <p> element
+                if (child.nodeName === "P") {
+                    const text = /^\d+\.(.+)/.exec(child.textContent);
+                    if (text && text[1]) {
+                        this.recipe.instructions[idx].steps.push(text[1].trim());
+                    }
+                    if (child.childNodes.length == 1 && child.childNodes[0].nodeName === "STRONG") {
+                        // Start a new instruction
+                        this.recipe.instructions.push({ name: child.childNodes[0].textContent, steps: [] });
+                        idx++;
+                    } 
+                }
             }
-            this.recipe.instructions.pop();
+            // hmm
+            //this.recipe.instructions.pop();
         } catch(error) {
             console.log(error);
             return this._createEmptyResponse();

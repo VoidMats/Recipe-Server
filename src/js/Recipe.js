@@ -9,44 +9,7 @@ export class Recipe {
     }
     
     /**
-     * Create the following html structure
-     * <div id="recipe-content" class="content">
-     *      <h2 class="content-subhead">Recipe</h2>
-     *      <div class="grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
-                <input readonly value="Title" />
-                <input readonly value="Time" />
-                <input readonly value="Servings" />
-                <input readonly value="Keywords" />
-            </div>
-            <div class="grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;">
-                <img src="/public/test.png" alt="Recipe image"/>
-                <textarea readonly>Some descirpion</textarea>
-            </div>
-            <div class="grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;">
-                <div>
-                    <h5 style="padding-top: 20px;">Ingredients</h4>
-                    <ul>
-                        <li>First ingredient</li>
-                        <li>Second ingredient</li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 style="padding-top: 20px;">Instruction</h5>
-                    <p>Name instruction</p>
-                    <ol>
-                        <li>First instruction</li>
-                        <li>Second instruction</li>
-                        <li>Third instruction</li>
-                    </ol>
-                    <p>Name instruction</p>
-                    <ol>
-                        <li>First instruction</li>
-                        <li>Second instruction</li>
-                        <li>Third instruction</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
+     * Create the html page for a recipe
      * @param { String } recipeId 
      */
     async addRecipeToPage(recipeId) {
@@ -74,9 +37,14 @@ export class Recipe {
             const header = document.createElement('h2');
             header.className = 'content-subhead';
             header.textContent = recipe.title;
-            // Info tag
+            // Info tags
             const info = document.createElement("div");
             info.classList.add("recipe-info");
+            // Info id
+            const infoId = document.createElement("div");
+            infoId.classList.add("recipe-info-tag");
+            const textId = document.createTextNode(`Id: ${recipe._id}`);
+            infoId.appendChild(textId);
             // Info serving
             const infoServing = document.createElement("div");
             infoServing.classList.add("recipe-info-tag");
@@ -99,30 +67,29 @@ export class Recipe {
             infoTime.appendChild(textTime);
             // Info temperature
             
-            // Group them into info tag
+            // Group info tags
+            info.appendChild(infoId);
             info.appendChild(infoServing);
             info.appendChild(infoTime);
 
-            //
-            const grid1 = document.createElement('div');
-            grid1.className = 'grid';
-            grid1.style.display = 'grid';
-            grid1.style.gridTemplateColumns = 'repeat(4, 1fr)';
-            grid1.style.gap = '0.5rem';
+            // Keywords tags
+            const keywords = document.createElement("div");
+            keywords.classList.add("recipe-info");
+            // Add keywords
+            for (const keyword of recipe.keywords) {
+                const tag = document.createElement("div");
+                tag.classList.add("recipe-info-keyword");
+                const text = document.createTextNode(keyword);
+                tag.appendChild(text);
+                keywords.appendChild(tag);
+            }
 
-            const inputs = [recipe.title, recipe.time, recipe.servings, recipe.keywords];
-            inputs.forEach((context) => {
-                const input = document.createElement('input');
-                input.readOnly = true;
-                input.value = context;
-                grid1.appendChild(input);
-            });
-
+            // Add a grid with picture and description
             const grid2 = document.createElement('div');
             grid2.className = 'grid';
             grid2.style.display = 'grid';
             grid2.style.gridTemplateColumns = 'repeat(2, 1fr)';
-            grid2.style.gap = '0';
+            grid2.style.gap = '10px';
 
             const img = document.createElement('img');
             if (recipe.image) {
@@ -131,12 +98,13 @@ export class Recipe {
                 img.src = this._client._api.createUrl(`/public/missing.png`);
             }
             img.alt = 'Recipe image';
-            img.style.height = '100%';
+            img.classList.add("recipe-image");
 
             const descriptionTextarea = document.createElement('textarea');
             descriptionTextarea.readOnly = true;
             descriptionTextarea.textContent = recipe.description;
-            descriptionTextarea.style.height = '100%';
+            descriptionTextarea.classList.add("recipe-textarea");
+
 
             grid2.appendChild(img);
             grid2.appendChild(descriptionTextarea);
@@ -151,7 +119,7 @@ export class Recipe {
             const ingDiv = document.createElement('div');
 
             const ingH5 = document.createElement('h5');
-            ingH5.style.paddingTop = '20px';
+            ingH5.style.paddingTop = '10px';
             ingH5.textContent = 'Ingredients';
             ingDiv.appendChild(ingH5);
 
@@ -174,7 +142,7 @@ export class Recipe {
             const insDiv = document.createElement('div');
 
             const insH5 = document.createElement('h5');
-            insH5.style.paddingTop = '20px';
+            insH5.style.paddingTop = '10px';
             insH5.textContent = 'Instruction';
             insDiv.appendChild(insH5);
 
@@ -201,7 +169,7 @@ export class Recipe {
             // Append all elements
             root.appendChild(header);
             root.appendChild(info);
-            root.appendChild(grid1);
+            root.appendChild(keywords);
             root.appendChild(grid2);
             root.appendChild(grid3);
         } else {
