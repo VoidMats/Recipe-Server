@@ -3,8 +3,7 @@
 import getUserLocale from 'get-user-locale';
 
 import { API } from "./API";
-import { ButtonApi, ButtonApiModal } from "./Buttons";
-import { InputAPI } from "./Inputs";
+import { ButtonApiModal } from "./Buttons";
 import { LinkPage } from './Links';
 import { GridSearch, GridSearchTags } from "./Grid";
 import { SwitchDarkMode } from "./Switch";
@@ -18,7 +17,6 @@ class Client {
         this._language = getUserLocale();
         
         const url = this._api.createUrl("/public/languages.json");
-        console.log(url);
         this._api.fetch("GET", url)
         .then((json) => { 
             this._tableLanguages = json;
@@ -28,7 +26,6 @@ class Client {
             this._linkSearch = new LinkPage(this, "link-search", "search-content");
             this._linkParse = new LinkPage(this, "link-parse", "parse-content");
             this._linkAdd = new LinkPage(this, "link-add", "add-content");
-            this._lindDelete = new LinkPage(this, "link-delete", "delete-content");
             this._switchDarkMode = new SwitchDarkMode("dark-mode-switch", "html-main");
             // Set selected language according to browser 
             document.getElementById("language-selection").textContent = this._tableLanguages["languages"][this._language];
@@ -93,7 +90,7 @@ class Client {
         this._searchTags.setLanguage();
     }
 
-    getWord(word, table, setFirstUpperCase = false) {
+    getWord(word, table, setFirstUpperCase = true) {
         const lookup = word.toLowerCase();
         let text = this._tableLanguages[table][lookup][this._language];
         if (setFirstUpperCase) text = text[0].toUpperCase() + text.slice(1);

@@ -150,6 +150,22 @@ export default async (fastify) => {
     });
 
     /**
+     * @param { String } query.language - Country code for the language where the recipe is located
+     * @returns { }
+     */
+    fastify.delete("/recipe/:id", async (request) => {
+        const id = _validateObjectId(request.params.id);
+        const { language } = request.query;
+        const recipe = await fastify.mongo.db.collection(`recipe-${language.toLowerCase()}`).deleteOne({ _id: id });
+        console.log(recipe);
+        if (!recipe) {
+            const error = createHttpError(404, `Recipe ${id} not found`);
+            return _createAnswer(false, undefined, error);
+        }
+        return _createAnswer(true, recipe);
+    });
+
+    /**
      * Route to search for recipes. 
      * @param { Object } query - request.query
      * @param { String } query.text - Search text in title

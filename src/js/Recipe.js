@@ -34,9 +34,21 @@ export class Recipe {
             const root = document.getElementById(this._containerId);
             root.hidden = false;
             // Header
+            const headerContainer = document.createElement('div');
+            headerContainer.className = 'header-container';
+            headerContainer.style.display = 'flex';
+            headerContainer.style.alignItems = 'center';
+
             const header = document.createElement('h2');
             header.className = 'content-subhead';
             header.textContent = recipe.title;
+            const headerButton = document.createElement('button');
+            headerButton.textContent = this._client.getWord("delete", "general", true);
+            headerButton.classList.add("button-header");
+            headerButton.addEventListener("click", (event) => this.deleteRecipe(event, recipe.id));
+            headerContainer.appendChild(header);
+            headerContainer.appendChild(headerButton);
+
             // Info tags
             const info = document.createElement("div");
             info.classList.add("recipe-info");
@@ -167,7 +179,7 @@ export class Recipe {
             grid3.appendChild(insDiv);
 
             // Append all elements
-            root.appendChild(header);
+            root.appendChild(headerContainer);
             root.appendChild(info);
             root.appendChild(keywords);
             root.appendChild(grid2);
@@ -180,16 +192,13 @@ export class Recipe {
     removeRecipeFromPage() {
         // Get container element
         const root = document.getElementById(this._containerId);
-        root.textContent = "";
+        // TODO remove event listener for delete button
+        root.textContent = ""; // TODO not correct
         root.hidden = true;
     }
-}
 
-export class RecipeDelete extends Recipe {
-    
-    constructor(containerId) {
-        super(containerId);
+    async deleteRecipe(event, id) {
+        event.preventDefault();
+        //const test = await this._client._api.fetch()
     }
-
-
 }

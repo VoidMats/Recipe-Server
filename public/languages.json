@@ -11,6 +11,12 @@
             "sv-SE": "sök",
             "fr-FR": "",
             "de-DE": ""
+        },
+        "delete": {
+            "en-US": "delete",
+            "sv-SE": "radera",
+            "fr-FR": "supprimer",
+            "de-DE": "löschen"
         }
     },
     "baking": {
