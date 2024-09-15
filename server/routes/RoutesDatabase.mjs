@@ -156,13 +156,13 @@ export default async (fastify) => {
     fastify.delete("/recipe/:id", async (request) => {
         const id = _validateObjectId(request.params.id);
         const { language } = request.query;
-        const recipe = await fastify.mongo.db.collection(`recipe-${language.toLowerCase()}`).deleteOne({ _id: id });
-        console.log(recipe);
-        if (!recipe) {
+        const response = await fastify.mongo.db.collection(`recipe-${language.toLowerCase()}`).deleteOne({ _id: id });
+        console.log(response);
+        if (!response.acknowledged || response.deletedCount !== 1) {
             const error = createHttpError(404, `Recipe ${id} not found`);
             return _createAnswer(false, undefined, error);
         }
-        return _createAnswer(true, recipe);
+        return _createAnswer(true, response);
     });
 
     /**

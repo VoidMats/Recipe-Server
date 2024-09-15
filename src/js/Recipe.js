@@ -6,6 +6,7 @@ export class Recipe {
     constructor(client, containerId) {
         this._client = client;
         this._containerId = containerId;
+        this._recipe = null;
     }
     
     /**
@@ -29,6 +30,7 @@ export class Recipe {
         const response = await this._client._api.fetch("GET", url);
         if (response.success) {
             const recipe = response.result;
+            //this._recipe = recipe;
 
             // Get container element
             const root = document.getElementById(this._containerId);
@@ -43,9 +45,10 @@ export class Recipe {
             header.className = 'content-subhead';
             header.textContent = recipe.title;
             const headerButton = document.createElement('button');
+            headerButton.id = "recipe-button-delete";
             headerButton.textContent = this._client.getWord("delete", "general", true);
             headerButton.classList.add("button-header");
-            headerButton.addEventListener("click", (event) => this.deleteRecipe(event, recipe.id));
+            headerButton.addEventListener("click", (event) => this.deleteRecipe(event, recipe._id));
             headerContainer.appendChild(header);
             headerContainer.appendChild(headerButton);
 
@@ -185,20 +188,37 @@ export class Recipe {
             root.appendChild(grid2);
             root.appendChild(grid3);
         } else {
-            new Alert("error", response.error, true);
+            new Alert("error", response.error, { dismissable: true });
         }
     }
 
     removeRecipeFromPage() {
+        const buttonDelete = document.getElementById("recipe-button-delete");
+        if (buttonDelete) {
+            buttonDelete.removeEventListener("click", this.deleteRecipe);
+        }
         // Get container element
         const root = document.getElementById(this._containerId);
-        // TODO remove event listener for delete button
-        root.textContent = ""; // TODO not correct
+        root.replaceChildren();
         root.hidden = true;
     }
 
     async deleteRecipe(event, id) {
         event.preventDefault();
-        //const test = await this._client._api.fetch()
+        const url = this._client._api.createUrl(`/recipe/${id}`, { language: this._client._language });
+        const response = await this._client._api.fetch("DELETE", url);
+        if (response.success) {
+            this.removeRecipeFromPage();
+            // Hided all pages
+            for (const page of this._client.__pages) {
+                const div = document.getElementById(`${page}-content`);
+                div.hidden = true;
+            }
+
+            const div = document.getElementById("search-content");
+            div.hidden = false;
+        } else {
+            new Alert("error", response.error, { dismissable: true });
+        }
     }
 }
