@@ -111,7 +111,7 @@
                 "properties": {
                     "name": {
                         "type": ["string", "null"],
-                        "description": "Name of this instruction"
+                        "description": "Name of the sub-meal of the recipe"
                     },
                     "steps": {
                         "type": "array",

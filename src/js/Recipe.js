@@ -36,21 +36,37 @@ export class Recipe {
             const root = document.getElementById(this._containerId);
             root.hidden = false;
             // Header
-            const headerContainer = document.createElement('div');
-            headerContainer.className = 'header-container';
-            headerContainer.style.display = 'flex';
-            headerContainer.style.alignItems = 'center';
+            const headerContainer = document.createElement("div");
+            headerContainer.classList.add("header-container");
+            headerContainer.style.display = "flex";
+            headerContainer.style.alignItems = "center";
 
-            const header = document.createElement('h2');
+            const header = document.createElement("h2");
             header.className = 'content-subhead';
             header.textContent = recipe.title;
-            const headerButton = document.createElement('button');
-            headerButton.id = "recipe-button-delete";
-            headerButton.textContent = this._client.getWord("delete", "general", true);
-            headerButton.classList.add("button-header");
-            headerButton.addEventListener("click", (event) => this.deleteRecipe(event, recipe._id));
+            // Button container
+            const buttonContainer = document.createElement("div");
+            buttonContainer.style.display = "flex";
+            buttonContainer.style.gap = "10px";
+            buttonContainer.style.marginLeft = "auto";
+            // Add button for delete
+            const headerButtonDelete = document.createElement("button");
+            headerButtonDelete.id = "recipe-header-button";
+            headerButtonDelete.textContent = this._client.getWord("delete", "general", true);
+            headerButtonDelete.classList.add("button-header");
+            headerButtonDelete.addEventListener("click", (event) => this.deleteRecipe(event, recipe._id));
+            // Add button for edit
+            const headerButtonEdit = document.createElement('button');
+            headerButtonEdit.id = "recipe-header-button";
+            headerButtonEdit.textContent = this._client.getWord("edit", "general", true);
+            headerButtonEdit.classList.add("button-header");
+            headerButtonEdit.addEventListener("click", (event) => this.editRecipe(event, recipe._id));
+            // Append to header
             headerContainer.appendChild(header);
-            headerContainer.appendChild(headerButton);
+            buttonContainer.appendChild(headerButtonDelete);
+            buttonContainer.appendChild(headerButtonEdit);
+            headerContainer.appendChild(buttonContainer);
+            headerContainer.appendChild(headerButtonDelete);
 
             // Info tags
             const info = document.createElement("div");
@@ -120,7 +136,6 @@ export class Recipe {
             descriptionTextarea.textContent = recipe.description;
             descriptionTextarea.classList.add("recipe-textarea");
 
-
             grid2.appendChild(img);
             grid2.appendChild(descriptionTextarea);
 
@@ -135,7 +150,7 @@ export class Recipe {
 
             const ingH5 = document.createElement('h5');
             ingH5.style.paddingTop = '10px';
-            ingH5.textContent = 'Ingredients';
+            ingH5.textContent = this._client.getWord("delete", "general", true);'Ingredients';
             ingDiv.appendChild(ingH5);
 
             for (const component of recipe.components) {
@@ -158,7 +173,7 @@ export class Recipe {
 
             const insH5 = document.createElement('h5');
             insH5.style.paddingTop = '10px';
-            insH5.textContent = 'Instruction';
+            insH5.textContent = this._client.getWord("instruction", "general", true);
             insDiv.appendChild(insH5);
 
             if (Array.isArray(recipe.instructions)) {
@@ -214,11 +229,18 @@ export class Recipe {
                 const div = document.getElementById(`${page}-content`);
                 div.hidden = true;
             }
-
+            // Clear seach and search cards
+            this._client._search.clearSearchGrid(true);
+            // Unhide search
             const div = document.getElementById("search-content");
             div.hidden = false;
         } else {
             new Alert("error", response.error, { dismissable: true });
         }
+    }
+
+    editRecipe(event, id) {
+        event.preventDefault();
+
     }
 }

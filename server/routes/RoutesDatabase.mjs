@@ -157,7 +157,6 @@ export default async (fastify) => {
         const id = _validateObjectId(request.params.id);
         const { language } = request.query;
         const response = await fastify.mongo.db.collection(`recipe-${language.toLowerCase()}`).deleteOne({ _id: id });
-        console.log(response);
         if (!response.acknowledged || response.deletedCount !== 1) {
             const error = createHttpError(404, `Recipe ${id} not found`);
             return _createAnswer(false, undefined, error);

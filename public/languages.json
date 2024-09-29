@@ -17,6 +17,18 @@
             "sv-SE": "radera",
             "fr-FR": "supprimer",
             "de-DE": "löschen"
+        },
+        "edit": {
+            "en-US": "edit",
+            "sv-SE": "redigera",
+            "fr-FR": "modifier",
+            "de-DE": "bearbeiten"
+        },
+        "instruction": {
+            "en-US": "instruction",
+            "sv-SE": "instruktion",
+            "fr-FR": "",
+            "de-DE": ""
         }
     },
     "baking": {

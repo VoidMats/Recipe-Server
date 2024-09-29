@@ -47,7 +47,6 @@ export default class ParserSVT extends Parser {
                 listIngredients.removeChild(childNodes[0]);
             }
             // If there is no sub-headers in components
-            // TODO this could be done better
             if (listNames.length === 0) {
                 const subComponent = { 
                     name: this.recipe.title,
@@ -56,14 +55,24 @@ export default class ParserSVT extends Parser {
                 const ul = listIngredients.children[0].children[0];
                 for (const li of ul.childNodes) {
                     const portion = {};
-                    const size_unit = li.querySelector('span');
+                    const size_unit = li.querySelectorAll('span');
                     if (size_unit) {
-                        const size = size_unit.firstChild?.nodeValue;
-                        portion["size"] = (size) ? size : "";
-                        let unit;
-                        if (size_unit.length === 2) {
-                            unit = size_unit.lastChild?.nodeValue;
+                        let size, unit;
+                        if (size_unit.children.length >= 1) {
+                            size = size_unit.firstChild?.textContent;
+                            unit = size_unit.lastChild?.textContext;
+                        } else {
+                            let size_unit_text = size_unit.textContent.trim();
+                            const checkSplit = /(\d+)([a-zA-Z]+)/.exec(size_unit_text);
+                            if (checkSplit) {
+                                size = checkSplit[1]; 
+                                unit = checkSplit[2]; 
+                            } else {
+                                size = size_unit_text;
+                                unit = "";
+                            }
                         }
+                        portion["size"] = (size) ? size : "";
                         portion["unit"] = (unit) ? unit : "";
                     }
                     //const ingredient = li.querySelector('div[class*="Recipe_svtmat_recipe__ingredientsItemCell"]');
@@ -84,12 +93,22 @@ export default class ParserSVT extends Parser {
                                 const portion = {};
                                 const size_unit = li.querySelector('span');
                                 if (size_unit) {
-                                    const size = size_unit.firstChild?.nodeValue;
-                                    portion["size"] = (size) ? size : "";
-                                    let unit;
-                                    if (size_unit.length === 2) {
-                                        unit = size_unit.lastChild?.nodeValue;
+                                    let size, unit;
+                                    if (size_unit.children.length >= 1) {
+                                        size = size_unit.firstChild?.textContent;
+                                        unit = size_unit.lastChild?.textContext;
+                                    } else {
+                                        let size_unit_text = size_unit.textContent.trim();
+                                        const checkSplit = /(\d+)([a-zA-Z]+)/.exec(size_unit_text);
+                                        if (checkSplit) {
+                                            size = checkSplit[1]; 
+                                            unit = checkSplit[2]; 
+                                        } else {
+                                            size = size_unit_text;
+                                            unit = "";
+                                        }
                                     }
+                                    portion["size"] = (size) ? size : "";
                                     portion["unit"] = (unit) ? unit : "";
                                 }
                                 const ingredient = li.lastChild.textContent;
